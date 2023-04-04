@@ -65,6 +65,21 @@ approvepls.addEventListener('click',function(){
       contribute_usdc_peg_price.innerHTML = '$' + ethers.utils.formatUnits(milestone.priceOfPeg,6) 
       toppegprice.innerHTML = '$PEG Price ' + ethers.utils.formatUnits(milestone.priceOfPeg,6) 
 
+      //populate distribution section
+
+      const pls_distribution = document.getElementById('pls-distribution');
+      const usdc_distribution = document.getElementById('usdc-distribution');
+      const loading_indicator_pls = document.getElementById('loading-indicator-pls');
+      const loading_indicator_usdc = document.getElementById('loading-indicator-usdc');
+
+      //calculate section values
+      //25% * max raise in USD per current milestone for PLS per 100,000 PEG
+      let pls_dist = parseFloat((25/100)*ethers.utils.formatUnits(milestone.totalUSDCRaised,6)).toFixed(2)
+      pls_distribution.innerHTML = '$'+pls_dist+ 'per 100,000 $PEG'
+
+      let USDC_dist = parseFloat((75/100)*ethers.utils.formatUnits(milestone.totalUSDCRaised,6)).toFixed(2)
+      usdc_distribution.innerHTML = '$'+USDC_dist+ 'per 300,000 $PEG'
+
 
       //setting varibales of section above donate
       const cl = document.getElementById('currentlevel');
