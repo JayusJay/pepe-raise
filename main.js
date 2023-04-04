@@ -77,9 +77,9 @@ approvepls.addEventListener('click',function(){
       contributionUSDCLevelDiv.innerHTML = 'USDC Level '+ data
       contributionPLSLevelDiv.innerHTML = 'PLS Level '+ data
 
-      const plscontributed = document.getElementsById('pls-contrib') //id is ideal
+      const plscontributed = document.getElementById('pls-contrib') //id is ideal
       plscontributed.innerHTML = ethers.utils.formatUnits(milestone.plsRaised,18) + ' $PLS'
-      const usdccontributed = document.getElementsById('usdc-contrib') //id is ideal
+      const usdccontributed = document.getElementById('usdc-contrib') //id is ideal
       usdccontributed.innerHTML = ethers.utils.formatUnits(milestone.usdcRaised,6) + ' $USDC'
 
 
