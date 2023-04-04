@@ -58,9 +58,11 @@ approvepls.addEventListener('click',function(){
       
       const currentPegPrice = document.getElementById('current_peg_price')
       const contributePlsPegPrice = document.getElementById('contribute_pls_peg_price')
+      const contribute_usdc_peg_price = document.getElementById('contribute_usdc_peg_price')
       const toppegprice = document.getElementById('toppegprice')
                 currentPegPrice.innerHTML = '$' + ethers.utils.formatUnits(milestone.priceOfPeg,6) 
       contributePlsPegPrice.innerHTML = '$' + ethers.utils.formatUnits(milestone.priceOfPeg,6) 
+      contribute_usdc_peg_price.innerHTML = '$' + ethers.utils.formatUnits(milestone.priceOfPeg,6) 
       toppegprice.innerHTML = '$PEG Price ' + ethers.utils.formatUnits(milestone.priceOfPeg,6) 
 
 
@@ -69,7 +71,7 @@ approvepls.addEventListener('click',function(){
       cl.innerHTML = 'Level '+data
       //console.log('current level::',data)
       const levelcontent = document.getElementById('levelcontent');
-      levelcontent.innerHTML = '$'+ (ethers.utils.formatUnits(milestone.totalUSDCRaised,6)) +': 25% PLS / 75% USDC'
+      levelcontent.innerHTML = '$'+ parseFloat(ethers.utils.formatUnits(milestone.totalUSDCRaised,6)).toFixed(2) +': 25% PLS / 75% USDC'
 
       const contributionUSDCLevelDiv = document.getElementById('current_usdc_level')
       const contributionPLSLevelDiv = document.getElementById('current_pls_level')
@@ -77,10 +79,31 @@ approvepls.addEventListener('click',function(){
       contributionUSDCLevelDiv.innerHTML = 'USDC Level '+ data
       contributionPLSLevelDiv.innerHTML = 'PLS Level '+ data
 
-      const plscontributed = document.getElementById('pls-contrib') //id is ideal
-      plscontributed.innerHTML = ethers.utils.formatUnits(milestone.plsRaised,18) + ' $PLS'
-      const usdccontributed = document.getElementById('usdc-contrib') //id is ideal
-      usdccontributed.innerHTML = ethers.utils.formatUnits(milestone.usdcRaised,6) + ' $USDC'
+      //lets get the user contributions for teh current milestone
+      getUsersInMileStone(data).then(outp=>{
+        console.log("user in milestone:",outp)
+        let total_usdc = ethers.utils.parseUnits('0',6);
+        let total_pls = ethers.utils.parseUnits('0',18)
+        //filter current user
+        for(let user in outp){
+          
+          if(outp[user].user == address){
+            //let add the values
+            total_pls = total_pls.add(outp[user].plsDonations)
+            total_usdc = total_usdc.add(outp[user].usdcDonations)
+          }
+        }
+
+//add new values to element
+    const plscontributed = document.getElementById('pls-contrib') //id is ideal
+    plscontributed.innerHTML = parseFloat(ethers.utils.formatUnits(total_pls,18)).toFixed(2) + ' $PLS'
+    const usdccontributed = document.getElementById('usdc-contrib') //id is ideal
+    usdccontributed.innerHTML = ethers.utils.formatUnits(total_usdc,6) + ' $USDC'
+
+      }).catch(err=>{
+        console.log("error get user in milestone:",err)
+      })
+     
 
 
       //generalprogressindicator
