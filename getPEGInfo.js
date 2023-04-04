@@ -62,7 +62,7 @@ async function getCurrentMilestone(){
 async function getMilestone(milestone){
     try {
         const data = await main_contract.milestones(milestone)
-        console.log(data)
+        //console.log(data)
         return data;
     } catch (error) {
         console.log(error)
@@ -83,7 +83,7 @@ async function getUsersInMileStone(milestone){
     console.log(main_contract)
     try {
         let user = await main_contract.getUsersPerMilestone(milestone)
-        console.log("USER::",user)
+       // console.log("USER::",user)
         return user;
     } catch (error) {
         console.log(error)
@@ -97,7 +97,7 @@ async function approveUSDC(){
         const tokenContract = new ethers.Contract(usdc_address, erc20ABI, signer);
         const tx = await tokenContract.approve('0x38E56fc4Ca17Ba6230b3A62593cAB91CAB78d043', ethers.constants.MaxUint256)
         const receipt = await tx.wait();
-        console.log('Approval successful:', receipt);
+       // console.log('Approval successful:', receipt);
     } catch (error) {
         console.log(error)
     }

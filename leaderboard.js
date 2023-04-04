@@ -6,25 +6,49 @@ async function getAllUsers() {
         const users = await main_contract.getUsersPerMilestone(i)
         if (i === 1) {
             for (const user of users) {
-                allUsers[user.user] = user; /// @notice allUsers[userAddress] = userObject
-                allUsers[user.user].totalDonation = user.usdcDonations.add(user.usdcOfPlsDonations)
+                allUsers[user.user] = {
+                    plsDonations: user.plsDonations,
+                    usdcDonations: user.usdcDonations,
+                    usdcOfPlsDonations: user.usdcOfPlsDonations,
+                    totalDonation: user.usdcDonations.add(user.usdcOfPlsDonations)
+                }
+               
             }
+            console.log('allUsers: ', allUsers)
+
             continue
         }
 
-        for (let user of users) {
+        for (const user of users) {
             if (user.user in allUsers) {
-                /// @notice expecting the values of the pls donations, usdcDonations ... to be BigNumbers
-                allUsers[user.user].plsDonations = allUsers[user.user].plsDonations.add(user.plsDonations)
-                allUsers[user.user].usdcDonations = allUsers[user.user].usdcDonations.add(user.usdcDonations)
-                allUsers[user.user].usdcOfPlsDonations = allUsers[user.user].usdcOfPlsDonations.add(user.usdcOfPlsDonations)
-                allUsers[user.user].totalDonation = allUsers[user.user].totalDonation.add(user.usdcDonations).add(user.usdcOfPlsDonations)
+                const { plsDonations, usdcDonations, usdcOfPlsDonations } = user;
+                const {
+                    plsDonations: currentPlsDonations,
+                    usdcDonations: currentUsdcDonations,
+                    usdcOfPlsDonations: currentUsdcOfPlsDonations,
+                    totalDonation: currentTotalDonation,
+                } = allUsers[user.user];
+
+                const totalDonation = currentUsdcDonations.add(currentUsdcOfPlsDonations).add(usdcDonations).add(usdcOfPlsDonations);
+
+                allUsers[user.user] = {
+                    ...allUsers[user.user],
+                    plsDonations: currentPlsDonations.add(plsDonations),
+                    usdcDonations: currentUsdcDonations.add(usdcDonations),
+                    usdcOfPlsDonations: currentUsdcOfPlsDonations.add(usdcOfPlsDonations),
+                    totalDonation,
+                };
             }
             else {
-                allUsers[user.user] = user;
-                allUsers[user.user].totalDonation = user.usdcDonations.add(user.usdcOfPlsDonations)
+                allUsers[user.user] = {
+                    plsDonations: user.plsDonations,
+                    usdcDonations: user.usdcDonations,
+                    usdcOfPlsDonations: user.usdcOfPlsDonations,
+                    totalDonation: user.usdcDonations.add(user.usdcOfPlsDonations)
+                }
 
             }
+            console.log('second all users: ',allUsers)
         }
     }
     return allUsers
@@ -64,7 +88,7 @@ function loadLeaderBoardData(data) {
         amountElement.setAttribute('fs-cmssort-field', 'IDENTIFIER');
 
         // addressElement.innerHTML = `${entry.address.substring(0, 4)}.....${entry.address.slice(-4)}`
-        amountElement.innerHTML = `${ethers.utils.formatUnits(entry.usdcDonations, 6)}`
+        amountElement.innerHTML = `${ethers.utils.formatUnits(entry.totalDonation, 6)}`
 
         //Applying background colour class to all even entries
         if (index % 2 === 0) {

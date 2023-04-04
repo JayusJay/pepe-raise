@@ -11,7 +11,7 @@ console.log('levels data::', levelsData)
 const levelsTable = document.querySelector('[datasource="levels-table"]');
 levelsData.slice(0, 10).forEach((entry, index) => {
     let levelElement = ''
-    let filled = ((entry.totalUSDCRaised.toNumber() + entry.usdcOfPlsRaised.toNumber()) / entry.targetAmount.toNumber()) * 100
+    let filled = ethers.utils.formatUnits(((entry.totalUSDCRaised.add(entry.usdcOfPlsRaised)).div(entry.targetAmount).mul(100)),  6)
     console.log('filled::', filled, isNaN(filled))
 
     const entryElement = document.createElement('div');
@@ -33,7 +33,7 @@ levelsData.slice(0, 10).forEach((entry, index) => {
                ${levelElement}
             </div>
             <div role="cell" class="table9_column is-width-large">
-                <div fs-cmssort-type="date" fs-cmssort-field="IDENTIFIER">$${entry.targetAmount.toNumber().toLocaleString()}</div>
+                <div fs-cmssort-type="date" fs-cmssort-field="IDENTIFIER">$${ethers.utils.formatUnits(entry.targetAmount, 6).toLocaleString()}</div>
             </div>
             <div role="cell" class="table9_column is-width-large">
                 <div fs-cmssort-type="date" fs-cmssort-field="IDENTIFIER" class="text-table-small">$${(0.25 * entry.targetAmount).toLocaleString()} $PLS</div>
@@ -45,10 +45,10 @@ levelsData.slice(0, 10).forEach((entry, index) => {
             
             <div role="cell" class="table9_column is-width-large">
                 <div class="contribute-table-div">
-                <div fs-cmssort-type="date" fs-cmssort-field="IDENTIFIER" class="text-table-normal">${entry.usdcOfPlsRaised.toNumber()} </div>
+                <div fs-cmssort-type="date" fs-cmssort-field="IDENTIFIER" class="text-table-normal">${ethers.utils.formatUnits(entry.usdcOfPlsRaised, 6)} </div>
                 <img src="https://uploads-ssl.webflow.com/641c2b181f41df422637adc5/642aa5061c682780a92fd247_Group%20427320201.png" loading="lazy" alt="" class="icon">
                 </div>
-                <div fs-cmssort-type="date" fs-cmssort-field="IDENTIFIER" class="text-table-small _1">$${entry.usdcOfPlsRaised.toNumber().toLocaleString()}</div>
+                <div fs-cmssort-type="date" fs-cmssort-field="IDENTIFIER" class="text-table-small _1">$${ethers.utils.formatUnits(entry.usdcOfPlsRaised, 6).toLocaleString()}</div>
             </div>
 
 
@@ -57,10 +57,10 @@ levelsData.slice(0, 10).forEach((entry, index) => {
 
             <div role="cell" class="table9_column is-width-large">
                 <div class="contribute-table-div">
-                    <div fs-cmssort-type="date" fs-cmssort-field="IDENTIFIER" class="text-table-normal">${entry.totalUSDCRaised.toNumber()} </div>
+                    <div fs-cmssort-type="date" fs-cmssort-field="IDENTIFIER" class="text-table-normal">${ethers.utils.formatUnits(entry.totalUSDCRaised, 6)} </div>
                     <img src="https://uploads-ssl.webflow.com/641c2b181f41df422637adc5/642aaa0edcf1074770fd060b_%24PLS.png" loading="lazy" alt="" class="icon">
                 </div>
-                <div fs-cmssort-type="date" fs-cmssort-field="IDENTIFIER" class="text-table-small _1">$${entry.totalUSDCRaised.toNumber()}</div>
+                <div fs-cmssort-type="date" fs-cmssort-field="IDENTIFIER" class="text-table-small _1">$${ethers.utils.formatUnits(entry.totalUSDCRaised,6)}</div>
             </div>
 
 
