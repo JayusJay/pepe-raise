@@ -1,26 +1,8 @@
 //let currentMileStone = 0
 let currentPegPrice =0
 
-// var tag1 = document.createElement("script");
-// var tag2 = document.createElement("script");
-// var tag3 = document.createElement("script");
-// tag1.src = "https://roulette-static-files.s3.us-west-2.amazonaws.com/getContributions.js";
-// tag2.src = "https://roulette-static-files.s3.us-west-2.amazonaws.com/makeContributions.js";
-// tag3.src = "https://roulette-static-files.s3.us-west-2.amazonaws.com/getPEGInfo.js";
-// document.getElementsByTagName("head")[0].appendChild(tag1);
-// document.getElementsByTagName("head")[0].appendChild(tag2);
-// document.getElementsByTagName("head")[0].appendChild(tag3);
-
   console.log('Roulette contract::',window.roulette)
 
-//tag3.addEventListener('load', function() {
-//	console.log('tag3 finished loading')
-//	getTotalAllocation()
-  //});
-
-//tag3.onload = function() {
-// The script has finished loading, you can now call a function in it
-//getTotalAllocation()
 const approvepls = document.getElementById('approvepls')
 const approveusdc = document.getElementById('approveusdc')
 approvepls.addEventListener('click',function(){
@@ -84,30 +66,35 @@ approvepls.addEventListener('click',function(){
 
       //setting varibales of section above donate
       const cl = document.getElementById('currentlevel');
-cl.innerHTML = 'Level '+data
-console.log('current level::',data)
-const levelcontent = document.getElementById('levelcontent');
-levelcontent.innerHTML = '$'+ (ethers.utils.formatUnits(milestone.totalUSDCRaised),6) +': 25% PLS / 75% USDC'
+      cl.innerHTML = 'Level '+data
+      //console.log('current level::',data)
+      const levelcontent = document.getElementById('levelcontent');
+      levelcontent.innerHTML = '$'+ (ethers.utils.formatUnits(milestone.totalUSDCRaised,6)) +': 25% PLS / 75% USDC'
 
-const contributionUSDCLevelDiv = document.getElementById('current_usdc_level')
-const contributionPLSLevelDiv = document.getElementById('current_pls_level')
+      const contributionUSDCLevelDiv = document.getElementById('current_usdc_level')
+      const contributionPLSLevelDiv = document.getElementById('current_pls_level')
 
-contributionUSDCLevelDiv.innerHTML = 'USDC Level '+ data
-contributionPLSLevelDiv.innerHTML = 'PLS Level '+ data
+      contributionUSDCLevelDiv.innerHTML = 'USDC Level '+ data
+      contributionPLSLevelDiv.innerHTML = 'PLS Level '+ data
+
+      const plscontributed = document.getElementsById('pls-contrib') //id is ideal
+      plscontributed.innerHTML = ethers.utils.formatUnits(milestone.plsRaised,18) + ' $PLS'
+      const usdccontributed = document.getElementsById('usdc-contrib') //id is ideal
+      usdccontributed.innerHTML = ethers.utils.formatUnits(milestone.usdcRaised,6) + ' $USDC'
 
 
-//generalprogressindicator
-const gpindc = document.getElementById('generalprogressindicator');
-//progressbar width = 300
-let currentcontb = (ethers.utils.formatUnits(milestone.totalUSDCRaised),6)
-let currentpercent = (currentcontb / ethers.utils.formatUnits(milestone.targetAmount,6)) * 100
-console.log("current percent:",currentpercent)
-gpindc.style.width = ((currentpercent/100)*300)+'px';
-//}
+      //generalprogressindicator
+      const gpindc = document.getElementById('generalprogressindicator');
+      //progressbar width = 300
+      let currentcontb = (ethers.utils.formatUnits(milestone.totalUSDCRaised,6))
+      let currentpercent = (currentcontb / ethers.utils.formatUnits(milestone.targetAmount,6)) * 100
+      console.log("current percent:",currentpercent)
+      gpindc.style.width = ((currentpercent/100)*300)+'px';
+      //}
 
-// toppegprice.innerHTML = '$PEG Price $0.5'
-let topnextpegprice = document.getElementById('topnextpegprice');
-topnextpegprice.innerHTML = 'Next Level: '+(ethers.utils.formatUnits(milestone.priceOfPeg.add(ethers.utils.parseUnits('0.10',6)),6))
+      // toppegprice.innerHTML = '$PEG Price $0.5'
+      let topnextpegprice = document.getElementById('topnextpegprice');
+      topnextpegprice.innerHTML = 'Next Level: '+(ethers.utils.formatUnits(milestone.priceOfPeg.add(ethers.utils.parseUnits('0.10',6)),6))
 
 
 
