@@ -165,18 +165,18 @@ getCurrentMilestone().then((data) => {
 
     //populate distribution section
 
-    const pls_distribution = document.getElementById('pls-distribution');
-    const usdc_distribution = document.getElementById('usdc-distribution');
-    const loading_indicator_pls = document.getElementById('loading-indicator-pls');
-    const loading_indicator_usdc = document.getElementById('loading-indicator-usdc');
+    // const pls_distribution = document.getElementById('pls-distribution');
+    // const usdc_distribution = document.getElementById('usdc-distribution');
+    // const loading_indicator_pls = document.getElementById('loading-indicator-pls');
+    // const loading_indicator_usdc = document.getElementById('loading-indicator-usdc');
 
     //calculate section values
     //25% * max raise in USD per current milestone for PLS per 100,000 PEG
-    let pls_dist = parseFloat((25 / 100) * ethers.utils.formatUnits(milestone.totalUSDCRaised, 6)).toFixed(2)
-    pls_distribution.innerHTML = '$' + pls_dist + 'per 100,000 $PEG'
+    // let pls_dist = parseFloat((25 / 100) * ethers.utils.formatUnits(milestone.totalUSDCRaised, 6)).toFixed(2)
+    // pls_distribution.innerHTML = '$' + pls_dist + 'per 100,000 $PEG'
 
-    let USDC_dist = parseFloat((75 / 100) * ethers.utils.formatUnits(milestone.totalUSDCRaised, 6)).toFixed(2)
-    usdc_distribution.innerHTML = '$' + USDC_dist + 'per 300,000 $PEG'
+    // let USDC_dist = parseFloat((75 / 100) * ethers.utils.formatUnits(milestone.totalUSDCRaised, 6)).toFixed(2)
+    // usdc_distribution.innerHTML = '$' + USDC_dist + 'per 300,000 $PEG'
 
 
     //setting varibales of section above donate
@@ -184,7 +184,7 @@ getCurrentMilestone().then((data) => {
     cl.innerHTML = 'Level ' + data
     //console.log('current level::',data)
     const levelcontent = document.getElementById('levelcontent');
-    console.log('THISS: ', parseFloat(ethers.utils.formatUnits(milestone.totalUSDCRaised, 6)).toFixed(2))
+    //console.log('THISS: ', parseFloat(ethers.utils.formatUnits(milestone.totalUSDCRaised, 6)).toFixed(2))
     levelcontent.innerHTML = '$' + parseFloat(ethers.utils.formatUnits(milestone.totalUSDCRaised, 6)).toFixed(2) + ' : 25% PLS / 75% USDC'
 
     const contributionUSDCLevelDiv = document.getElementById('current_usdc_level')
@@ -320,12 +320,13 @@ function getAllMileStones() {
 
 window.onload = () => {
   getUSDCBalance().then(response=>{
-    document.getElementById('usdc_balance').innerHTML = ethers.utils.formatUnits(response,6)
+    console.log("USDC:",response)
+    document.getElementById('usdc_balance').innerHTML ='Balance: ' + ethers.utils.formatUnits(response,6)
 })
 
 
 getPLSBalance().then(response=>{
-  document.getElementById('pls_balance').innerHTML = ethers.utils.formatUnits(response,18)
+  document.getElementById('pls_balance').innerHTML ='Balance: ' + ethers.utils.formatUnits(response,18)
 })
 
   getConsent()
