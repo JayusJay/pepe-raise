@@ -40,10 +40,10 @@ function loadPepesTableLevels(data) {
     });
 
     let pegPriceUsdc = entry.isCleared
-      ? (parseFloat(usdcRaised) / 15).toFixed(2)
+      ? (parseFloat(usdcRaised) / 300000).toFixed(2)
       : "TBD";
     let pegPricePls = entry.isCleared
-      ? (parseFloat(usdcOfPlsRaised) / 5).toFixed(2)
+      ? (parseFloat(usdcOfPlsRaised) / 100000).toFixed(2)
       : "TBD";
 
     const usdEquivalentOfUsdcRaised = parseFloat(usdcRaised);
