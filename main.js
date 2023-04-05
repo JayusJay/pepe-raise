@@ -65,6 +65,9 @@ approvepls.addEventListener('click',function(){
       contribute_usdc_peg_price.innerHTML = '$' + ethers.utils.formatUnits(milestone.priceOfPeg,6) 
       toppegprice.innerHTML = '$PEG Price ' + ethers.utils.formatUnits(milestone.priceOfPeg,6) 
 
+      const pegPriceContributions = document.getElementById('contributions_peg_price');
+      pegPriceContributions.innerHTML = '$'+ ethers.utils.formatUnits(milestone.priceOfPeg,6)
+
       //populate distribution section
 
       const pls_distribution = document.getElementById('pls-distribution');
@@ -96,7 +99,6 @@ approvepls.addEventListener('click',function(){
 
       //lets get the user contributions for teh current milestone
       getUsersInMileStone(data).then(outp=>{
-        console.log("user in milestone:",outp)
         let total_usdc = ethers.utils.parseUnits('0',6);
         let total_pls = ethers.utils.parseUnits('0',18)
         //filter current user
@@ -206,18 +208,18 @@ approvepls.addEventListener('click',function(){
     let user = null
    getUserDetails().then((response)=>{
     user=response;
-    console.log(user)
+    console.log("USER:::::::::::::::::",user)
     if(user){
         const plsContributions = document.getElementById('contributions_pls');
         const usdcContributions = document.getElementById('contributions_usdc');
         const amountContributions = document.getElementById('contributions_amount');
         const pegContributions = document.getElementById('contributions_peg');
-        const pegPriceContributions = document.getElementById('contributions_peg_price');
+   
     
-        plsContributions.innerHTML = '$'+user?.contributed_pls
-        usdcContributions.innerHTML = '$'+user?.contributed_usdc
-        amountContributions.innerHTML = '$'+user?.contributed_amount
-        pegPriceContributions.innerHTML = user?.contributed_peg
+        plsContributions.innerHTML = '$'+ parseFloat(ethers.utils.formatUnits(user.plsDonations,18)).toFixed(2)
+        usdcContributions.innerHTML = '$'+ parseFloat(ethers.utils.formatUnits(user.usdcDonations,6)).toFixed(2)
+        amountContributions.innerHTML = '$'+ parseFloat(ethers.utils.formatUnits(user.usdcDonations.add(user.usdcOfPlsDonations),6)).toFixed(2)
+     
         pegContributions.innerHTML = user?.pegPrice
     }
 
