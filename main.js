@@ -266,7 +266,10 @@ getCurrentMilestone().then((data) => {
     let currentpercent = (currentcontb / ethers.utils.formatUnits(milestone.targetAmount, 6)) * 100
     console.log("current percent:", currentpercent)
     gpindc.style.width = ((currentpercent / 100) * 300) + 'px';
-    //}
+    
+    //lets move the rocket as well
+    document.getElementById('progress-rocket').style.left = (((currentpercent / 100) * 300) - 15) + '%'
+
 
     // toppegprice.innerHTML = '$PEG Price $0.5'
     let topnextpegprice = document.getElementById('topnextpegprice');
