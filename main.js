@@ -1,7 +1,62 @@
 //let currentMileStone = 0
 let currentPegPrice = 0
 
-console.log('Roulette contract::', window.roulette)
+  console.log('Roulette contract::',window.roulette)
+  const CONSENT_API_URL = 'https://4c7ygocnf1.execute-api.us-west-2.amazonaws.com/consent-function';
+
+function getConsent(){
+  //fetch consent data to confirm if to show modal or not
+  
+
+  const params = {
+      "useraddress":`${address}`,
+      "write":false
+  };
+  const options = {
+    method: 'POST',
+    body: JSON.stringify( params )  
+  };
+  fetch( CONSENT_API_URL, options )
+    .then( response => response.json() )
+    .then( response => {
+      //console.log('LSSSSSSSSSSSSSSSSSS:',response)
+        if(response?.length){
+          //do nothing user already consented
+        }else{
+          //show modal
+          const consentmodal = document.getElementById('consent_modal');
+          consentmodal.style.display = 'block'
+        }
+  } );
+}
+
+//function to log and close consent modal
+function saveConsent(){
+  const params = {
+    "useraddress":`${address}`,
+    "write":true
+  };
+  const options = {
+    method: 'POST',
+    body: JSON.stringify( params )  
+  };
+  fetch( CONSENT_API_URL, options )
+    .then( response => response.json() )
+    .then( response => {
+        if(response.status === 'success'){
+          const consentmodal = document.getElementById('consent_modal');
+          consentmodal.style.display = 'none'
+        }
+  } );
+
+}
+
+const consent_form = document.getElementById('email-form');
+consent_form.addEventListener('submit',(e)=>{
+  e.preventDefault()
+  saveConsent()
+})
+
 
 const approvepls = document.getElementById('approvepls')
 const approveusdc = document.getElementById('approveusdc')
@@ -224,7 +279,7 @@ function getAllMileStones() {
 }
 
 window.onload = () => {
-
+  getConsent()
   let user = null
   getUserDetails().then((response) => {
     user = response;
