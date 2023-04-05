@@ -36,6 +36,7 @@ async function makeContributionPLS(amount){
         
     } catch (error) {
         console.log(error)
+        throw(error)
     }
 }
 
@@ -60,5 +61,6 @@ async function makeContributionUSDC(amount){
         
     } catch (error) {
         console.log(error)
+        throw(error)
     }
 }
