@@ -270,12 +270,12 @@ window.onload = () => {
       // console.log('all milestones::', allMileStones)
 
       var milestoneTag = document.createElement("script");
-      milestoneTag.src = " https://roulette-static-files.s3.us-west-2.amazonaws.com/milestone.js";
+      milestoneTag.src = "/milestone.js";
       document.getElementsByTagName("body")[0].appendChild(milestoneTag);
 
 
       var pepesLevelTag = document.createElement("script");
-      pepesLevelTag.src = "https://roulette-static-files.s3.us-west-2.amazonaws.com/pepeslevel.js";
+      pepesLevelTag.src = "/pepeslevel.js";
       document.getElementsByTagName("body")[0].appendChild(pepesLevelTag);
 
 
