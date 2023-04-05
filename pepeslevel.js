@@ -23,18 +23,26 @@ function loadPepesTableLevels(data) {
         100;
     }
 
-    console.log("filled::", {
-      totalUSDCRaised: ethers.utils.formatUnits(entry.totalUSDCRaised, 6),
-      usdcOfPlsRaised: ethers.utils.formatUnits(entry.usdcOfPlsRaised, 6),
-      targetAmount: ethers.utils.formatUnits(entry.targetAmount, 6),
-      filled,
-    });
+    const usdcOfPlsRaised = ethers.utils.formatUnits(entry.usdcOfPlsRaised, 6);
+    const usdcRaised = ethers.utils.formatUnits(entry.usdcRaised, 6);
+    const priceOfPeg = ethers.utils.formatUnits(entry.priceOfPeg, 6);
+    const plsRaised = ethers.utils.formatUnits(entry.plsRaised, 18);
+    const targetAmount = ethers.utils.formatUnits(entry.targetAmount, 6);
+    const totalUSDCRaised = ethers.utils.formatUnits(entry.totalUSDCRaised, 6);
+
+    const usdEquivalentOfPlsRaised =
+      parseFloat(plsRaised) * parseFloat(priceOfPeg);
+    const usdEquivalentOfUsdcRaised = parseFloat(usdcRaised);
+
+    const formattedUsdEquivalentOfPlsRaised =
+      usdEquivalentOfPlsRaised.toFixed(2);
+    const formattedUsdEquivalentOfUsdcRaised =
+      usdEquivalentOfUsdcRaised.toFixed(2);
 
     const entryElement = document.createElement("div");
     entryElement.setAttribute("class", "level-wrapper");
-    // entryElement.setAttribute('role', 'row')
 
-    if (filled >= 100) {
+    if (entry.isCleared) {
       levelElement = `<div class="l-status">
             <img src="https://uploads-ssl.webflow.com/641c2b181f41df422637adc5/64200f60acf50ee5d2360703_SOLD%20OUT.png" loading="lazy" alt="" class="level-img">
             <div class="level-text">Level ${index + 1}</div>
@@ -67,16 +75,6 @@ function loadPepesTableLevels(data) {
     if (Number.isNaN(usdcPercentage)) {
       usdcPercentage = 0;
     }
-
-    console.log("index:" + index, { plsPercentage, usdcPercentage });
-
-
-    var pegPriceForUsdcSide =
-      parseFloat(ethers.utils.formatUnits(entry.usdcRaised, 18)) / 300000;
-    var pegPriceForPlsSide =
-      parseFloat(ethers.utils.formatUnits(entry.usdcOfPlsRaised, 18)) / 100000;
-
-    console.log("index:" + index, { plsPercentage, usdcPercentage });
 
     entryElement.innerHTML = `
         <div class="top">
@@ -113,9 +111,7 @@ function loadPepesTableLevels(data) {
         <div class="values-div">
            <div class="l-block">
               <div class="l-text">Max Raise</div>
-              <div class="l-value">$${entry.targetAmount
-                .toNumber()
-                .toLocaleString()}</div>
+              <div class="l-value">$${targetAmount}</div>
            </div>
            <div class="l-block">
               <div class="l-text">$PEG Distribution</div>
@@ -123,7 +119,7 @@ function loadPepesTableLevels(data) {
            </div>
            <div class="l-block">
               <div class="l-text">$PEG Start Price</div>
-              <div class="l-text">$${pegPriceForUsdcSide.toFixed(2)}</div>
+              <div class="l-text">$${priceOfPeg}</div>
              
            </div>
         </div>
@@ -137,10 +133,8 @@ function loadPepesTableLevels(data) {
                        <div class="text-distribution">$USD value</div>
                     </div>
                     <div class="div-wrapper">
-                       <div class="text-block---smaill value">PLS Level ${currentMileStone}</div>
-                       <div class="text-distribution">$${parseFloat(
-                         ethers.utils.formatUnits(entry.plsRaised, 18)
-                       ).toLocaleString()}</div>
+                       <div class="text-block---smaill value">${usdcOfPlsRaised}</div>
+                       <div class="text-distribution">$${formattedUsdEquivalentOfPlsRaised}</div>
 
                     </div>
                  </div>
@@ -149,9 +143,7 @@ function loadPepesTableLevels(data) {
                        <div class="text-block---smaill">$PEG Price</div>
                     </div>
                     <div class="div-wrapper">
-                       <div class="text-block---smaill value">$${
-                         entry.targetAmount.toNumber() / 400000
-                       }</div>
+                       <div class="text-block---smaill value">$${priceOfPeg}</div>
                     </div>
                  </div>
               </div>
@@ -165,10 +157,8 @@ function loadPepesTableLevels(data) {
                        <div class="text-distribution">$USD value</div>
                     </div>
                     <div class="div-wrapper">
-                       <div class="text-block---smaill value">USDC Level ${currentMileStone}</div>
-                       <div class="text-distribution">$${parseFloat(
-                         ethers.utils.formatUnits(entry.usdcRaised, 18)
-                       ).toLocaleString()}</div>
+                       <div class="text-block---smaill value">${usdcRaised}</div>
+                       <div class="text-distribution">${formattedUsdEquivalentOfUsdcRaised}</div>
 
                     </div>
                  </div>
@@ -177,9 +167,7 @@ function loadPepesTableLevels(data) {
                        <div class="text-block---smaill">$PEG Price</div>
                     </div>
                     <div class="div-wrapper">
-                       <div class="text-block---smaill value">$${
-                         entry.targetAmount.toNumber() / 400000
-                       }</div>
+                    <div class="text-block---smaill value">$${priceOfPeg}</div>
                     </div>
                  </div>
               </div>
