@@ -208,11 +208,12 @@ getCurrentMilestone().then((data) => {
     //console.log('THISS: ', parseFloat(ethers.utils.formatUnits(milestone.totalUSDCRaised, 6)).toFixed(2))
     levelcontent.innerHTML = '$' + parseFloat(ethers.utils.formatUnits(milestone.totalUSDCRaised, 6)).toFixed(2) + ' : 25% PLS / 75% USDC'
 
-    const contributionUSDCLevelDiv = document.getElementById('current_usdc_level')
-    const contributionPLSLevelDiv = document.getElementById('current_pls_level')
+    //removed from UI
+    // const contributionUSDCLevelDiv = document.getElementById('current_usdc_level')
+    // const contributionPLSLevelDiv = document.getElementById('current_pls_level')
 
-    contributionUSDCLevelDiv.innerHTML = 'USDC Level ' + data
-    contributionPLSLevelDiv.innerHTML = 'PLS Level ' + data
+    // contributionUSDCLevelDiv.innerHTML = 'USDC Level ' + data
+    // contributionPLSLevelDiv.innerHTML = 'PLS Level ' + data
 
     //lets get the user contributions for teh current milestone
     ///just call get user details.
