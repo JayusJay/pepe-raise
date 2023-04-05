@@ -14,7 +14,7 @@ async function getAllUsers() {
                 }
                
             }
-            console.log('allUsers: ', allUsers)
+            //console.log('allUsers: ', allUsers)
 
             continue
         }
@@ -48,7 +48,7 @@ async function getAllUsers() {
                 }
 
             }
-            console.log('second all users: ',allUsers)
+            //console.log('second all users: ',allUsers)
         }
     }
     return allUsers
