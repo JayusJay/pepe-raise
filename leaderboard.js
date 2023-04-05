@@ -88,7 +88,7 @@ function loadLeaderBoardData(data) {
         amountElement.setAttribute('fs-cmssort-field', 'IDENTIFIER');
 
         // addressElement.innerHTML = `${entry.address.substring(0, 4)}.....${entry.address.slice(-4)}`
-        amountElement.innerHTML = `${ethers.utils.formatUnits(entry.totalDonation, 6)}`
+        amountElement.innerHTML = parseFloat(parseFloat(ethers.utils.formatUnits(entry.totalDonation, 6)).toFixed(2)).toLocaleString()
 
         //Applying background colour class to all even entries
         if (index % 2 === 0) {
