@@ -62,6 +62,27 @@ const approvepls = document.getElementById('approvepls')
 const approveusdc = document.getElementById('approveusdc')
 const donatepls = document.getElementById("pls_error")
 const donateusdc = document.getElementById("usdc_error")
+let plsamountElement = document.getElementById('plsinput');
+let usdcamountElement = document.getElementById('usdcinput');
+
+const pls_max = document.getElementById("pls_max");
+const usdc_max = document.getElementById("usdc_max");
+
+pls_max.addEventListener("click",function(){
+  //get max pls balance and fill in donate input
+  getPLSBalance().then(response=>{
+    plsamountElement.value = ethers.utils.formatUnits(response,18)
+  })
+
+})
+
+usdc_max.addEventListener("click",function(){
+  //get max usdc balance and fill in donate input
+  getUSDCBalance().then(response=>{
+    usdcamountElement.value = ethers.utils.formatUnits(response,6)
+  })
+
+})
 
 approvepls.addEventListener('click', function () {
   //update status to processing 
@@ -70,8 +91,8 @@ approvepls.addEventListener('click', function () {
   donatepls.innerHTML = "Prosessing your transaction ..."
   getAllowancePLS().then(res => {
     //if approval is made we can then use the value in the input for deonation amount
-    let amountElement = document.getElementById('plsinput');
-    let plsamount = amountElement.value
+    
+    let plsamount = plsamountElement.value
     console.log("pls amount::", plsamount)
     if (plsamount >= 5) {
 
@@ -108,8 +129,8 @@ approveusdc.addEventListener('click', function () {
   getAllowanceUSDC().then(res => {
     //if approval is made we can then use the value in the input for deonation amount
     //if approval is made we can then use the value in the input for deonation amount
-    let amountElement = document.getElementById('usdcinput');
-    let usdcamount = amountElement.value
+   
+    let usdcamount = usdcamountElement.value
     console.log("pls amount::", usdcamount)
     if (usdcamount >= 5) {
 
@@ -207,18 +228,18 @@ getCurrentMilestone().then((data) => {
 
     //populate distribution section
 
-    const pls_distribution = document.getElementById('pls-distribution');
-    const usdc_distribution = document.getElementById('usdc-distribution');
-    const loading_indicator_pls = document.getElementById('loading-indicator-pls');
-    const loading_indicator_usdc = document.getElementById('loading-indicator-usdc');
+    // const pls_distribution = document.getElementById('pls-distribution');
+    // const usdc_distribution = document.getElementById('usdc-distribution');
+    // const loading_indicator_pls = document.getElementById('loading-indicator-pls');
+    // const loading_indicator_usdc = document.getElementById('loading-indicator-usdc');
 
     //calculate section values
     //25% * max raise in USD per current milestone for PLS per 100,000 PEG
-    let pls_dist = parseFloat((25 / 100) * ethers.utils.formatUnits(milestone.totalUSDCRaised, 6)).toFixed(2)
-    pls_distribution.innerHTML = '$' + pls_dist + 'per 100,000 $PEG'
+    // let pls_dist = parseFloat((25 / 100) * ethers.utils.formatUnits(milestone.totalUSDCRaised, 6)).toFixed(2)
+    // pls_distribution.innerHTML = '$' + pls_dist + 'per 100,000 $PEG'
 
-    let USDC_dist = parseFloat((75 / 100) * ethers.utils.formatUnits(milestone.totalUSDCRaised, 6)).toFixed(2)
-    usdc_distribution.innerHTML = '$' + USDC_dist + 'per 300,000 $PEG'
+    // let USDC_dist = parseFloat((75 / 100) * ethers.utils.formatUnits(milestone.totalUSDCRaised, 6)).toFixed(2)
+    // usdc_distribution.innerHTML = '$' + USDC_dist + 'per 300,000 $PEG'
 
 
     //setting varibales of section above donate
@@ -226,14 +247,15 @@ getCurrentMilestone().then((data) => {
     cl.innerHTML = 'Level ' + data
     //console.log('current level::',data)
     const levelcontent = document.getElementById('levelcontent');
-    console.log('THISS: ', parseFloat(ethers.utils.formatUnits(milestone.totalUSDCRaised, 6)).toFixed(2))
+    //console.log('THISS: ', parseFloat(ethers.utils.formatUnits(milestone.totalUSDCRaised, 6)).toFixed(2))
     levelcontent.innerHTML = '$' + parseFloat(ethers.utils.formatUnits(milestone.totalUSDCRaised, 6)).toFixed(2) + ' : 25% PLS / 75% USDC'
 
-    const contributionUSDCLevelDiv = document.getElementById('current_usdc_level')
-    const contributionPLSLevelDiv = document.getElementById('current_pls_level')
+    //removed from UI
+    // const contributionUSDCLevelDiv = document.getElementById('current_usdc_level')
+    // const contributionPLSLevelDiv = document.getElementById('current_pls_level')
 
-    contributionUSDCLevelDiv.innerHTML = 'USDC Level ' + data
-    contributionPLSLevelDiv.innerHTML = 'PLS Level ' + data
+    // contributionUSDCLevelDiv.innerHTML = 'USDC Level ' + data
+    // contributionPLSLevelDiv.innerHTML = 'PLS Level ' + data
 
     //lets get the user contributions for teh current milestone
     ///just call get user details.
@@ -280,7 +302,10 @@ getCurrentMilestone().then((data) => {
     let currentpercent = (currentcontb / ethers.utils.formatUnits(milestone.targetAmount, 6)) * 100
     console.log("current percent:", currentpercent)
     gpindc.style.width = ((currentpercent / 100) * 300) + 'px';
-    //}
+    
+    //lets move the rocket as well
+    document.getElementById('progress-rocket').style.left = (((currentpercent / 100) * 300) - 15) + '%'
+
 
     // toppegprice.innerHTML = '$PEG Price $0.5'
     let topnextpegprice = document.getElementById('topnextpegprice');
@@ -357,6 +382,16 @@ function getAllMileStones(milestoneId) {
 }
 
 window.onload = () => {
+  getUSDCBalance().then(response=>{
+    console.log("USDC:",response)
+    document.getElementById('usdc_balance').innerHTML ='Balance: ' + ethers.utils.formatUnits(response,6)
+})
+
+
+getPLSBalance().then(response=>{
+  document.getElementById('pls_balance').innerHTML ='Balance: ' + ethers.utils.formatUnits(response,18)
+})
+
   getConsent()
   let user = null
   getUserDetails().then((response) => {
