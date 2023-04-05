@@ -279,7 +279,7 @@ function getAllMileStones() {
 }
 
 window.onload = () => {
-
+  getConsent()
   let user = null
   getUserDetails().then((response) => {
     user = response;
