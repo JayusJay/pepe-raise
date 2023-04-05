@@ -304,7 +304,7 @@ getCurrentMilestone().then((data) => {
     gpindc.style.width = ((currentpercent / 100) * 300) + 'px';
     
     //lets move the rocket as well
-    document.getElementById('progress-rocket').style.left = (((currentpercent / 100) * 300) - 15) + '%'
+    document.getElementById('progress-rocket').style.left = (((currentpercent / 100) * 90) - 15) + '%'
 
 
     // toppegprice.innerHTML = '$PEG Price $0.5'
@@ -398,15 +398,15 @@ getPLSBalance().then(response=>{
     user = response;
     //console.log("USER:::::::::::::::::",user)
     if (user) {
-      const plsContributions = document.getElementById('contributions_pls');
-      const usdcContributions = document.getElementById('contributions_usdc');
-      const amountContributions = document.getElementById('contributions_amount');
+      //const plsContributions = document.getElementById('contributions_pls');
+      //const usdcContributions = document.getElementById('contributions_usdc');
+      //const amountContributions = document.getElementById('contributions_amount');
       const pegContributions = document.getElementById('contributions_peg');
 
 
-      plsContributions.innerHTML = '$' + parseFloat(ethers.utils.formatUnits(user.plsDonations, 18)).toFixed(2)
-      usdcContributions.innerHTML = '$' + parseFloat(ethers.utils.formatUnits(user.usdcDonations, 6)).toFixed(2)
-      amountContributions.innerHTML = '$' + parseFloat(ethers.utils.formatUnits(user.usdcDonations.add(user.usdcOfPlsDonations), 6)).toFixed(2)
+     // plsContributions.innerHTML = '$' + parseFloat(ethers.utils.formatUnits(user.plsDonations, 18)).toFixed(2)
+     // usdcContributions.innerHTML = '$' + parseFloat(ethers.utils.formatUnits(user.usdcDonations, 6)).toFixed(2)
+     // amountContributions.innerHTML = '$' + parseFloat(ethers.utils.formatUnits(user.usdcDonations.add(user.usdcOfPlsDonations), 6)).toFixed(2)
 
       pegContributions.innerHTML = user?.pegPrice
     }
