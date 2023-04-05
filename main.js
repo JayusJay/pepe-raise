@@ -60,7 +60,14 @@ consent_form.addEventListener('submit',(e)=>{
 
 const approvepls = document.getElementById('approvepls')
 const approveusdc = document.getElementById('approveusdc')
+const donatepls = document.getElementById("pls_error")
+const donateusdc = document.getElementById("usdc_error")
+
 approvepls.addEventListener('click', function () {
+  //update status to processing 
+  donatepls.style.display = 'block';
+  donatepls.style.color = 'yellow';
+  donatepls.innerHTML = "Prosessing your transaction ..."
   getAllowancePLS().then(res => {
     //if approval is made we can then use the value in the input for deonation amount
     let amountElement = document.getElementById('plsinput');
@@ -68,7 +75,23 @@ approvepls.addEventListener('click', function () {
     console.log("pls amount::", plsamount)
     if (plsamount >= 5) {
 
-      makeContributionPLS(plsamount)
+      makeContributionPLS(plsamount).then(respon=>{
+      
+        donatepls.innerHTML = "Thank you!. \n Your donation has been recieved successfully!"
+        donatepls.style.color = 'green';
+        //lets reload page
+        setTimeout(()=>{
+          location.reload()
+        },2000)
+      
+      }).catch(error=>{
+       
+        donatepls.innerHTML = "Sorry!. \n There was an error processing your donation at this time!"
+        donatepls.style.color = 'red';
+        setTimeout(()=>{
+          location.reload()
+        },2000)
+      })
     } else {
       alert("Please provide an amount for the PLS input field")
     }
@@ -79,6 +102,9 @@ approvepls.addEventListener('click', function () {
 })
 
 approveusdc.addEventListener('click', function () {
+  donateusdc.style.display = 'block';
+  donateusdc.style.color = 'yellow';
+  donateusdc.innerHTML = "Prosessing your donation ..."
   getAllowanceUSDC().then(res => {
     //if approval is made we can then use the value in the input for deonation amount
     //if approval is made we can then use the value in the input for deonation amount
@@ -87,7 +113,21 @@ approveusdc.addEventListener('click', function () {
     console.log("pls amount::", usdcamount)
     if (usdcamount >= 5) {
 
-      makeContributionUSDC(usdcamount)
+      makeContributionUSDC(usdcamount).then(respon=>{
+
+        donateusdc.innerHTML = "Thank you!. \n Your donation has been recieved successfully!"
+        donateusdc.style.color = 'green';
+        //lets reload page
+        setTimeout(()=>{
+          location.reload()
+        },2000)
+      }).catch(error=>{
+        donateusdc.style.color = 'red';
+        donateusdc.innerHTML = "Sorry!. \n There was an error processing your donation at this time!"
+        setTimeout(()=>{
+          location.reload()
+        },2000)
+      })
     } else {
       alert("Please provide an amount for the PLS input field")
     }

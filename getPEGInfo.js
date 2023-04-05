@@ -108,9 +108,10 @@ async function approveUSDC() {
         const tokenContract = new ethers.Contract(usdc_address, erc20ABI, signer);
         const tx = await tokenContract.approve('0x4AD908Fe53777CfB142556f70faB3aacF60d09EE', ethers.constants.MaxUint256)
         const receipt = await tx.wait();
-        // console.log('Approval successful:', receipt);
+        console.log('Approval successful:', receipt);
     } catch (error) {
         console.log(error)
+        throw(error)
     }
 
 }
@@ -124,6 +125,7 @@ async function approvePLS() {
         console.log('Approval successful:', receipt);
     } catch (error) {
         console.log(error)
+        throw(error)
     }
 
 }
@@ -134,10 +136,11 @@ async function getAllowancePLS() {
         const tokenContract = new ethers.Contract(pls_address, erc20ABI, signer);
         const allowance = await tokenContract.allowance(address, '0x4AD908Fe53777CfB142556f70faB3aacF60d09EE');
         if (ethers.utils.parseUnits('10', 18).gt(allowance)) {
-            approvePLS()
+            await approvePLS()
         }
     } catch (error) {
         console.log(error)
+        throw(error)
     }
 }
 
@@ -147,10 +150,11 @@ async function getAllowanceUSDC() {
         const tokenContract = new ethers.Contract(usdc_address, erc20ABI, signer);
         const allowance = await tokenContract.allowance(address, '0x4AD908Fe53777CfB142556f70faB3aacF60d09EE');
         if (ethers.utils.parseUnits('10', 6).gt(allowance)) {
-            approveUSDC()
+            await approveUSDC()
         }
     } catch (error) {
         console.log(error)
+        throw(error)
     }
 }
 
