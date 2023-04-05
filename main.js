@@ -19,7 +19,7 @@ function getConsent(){
   fetch( CONSENT_API_URL, options )
     .then( response => response.json() )
     .then( response => {
-      console.log('LSSSSSSSSSSSSSSSSSS:',response)
+      //console.log('LSSSSSSSSSSSSSSSSSS:',response)
         if(response?.length){
           //do nothing user already consented
         }else{
