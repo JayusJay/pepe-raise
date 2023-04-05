@@ -117,6 +117,11 @@ approvepls.addEventListener('click',function(){
     const usdccontributed = document.getElementById('usdc-contrib') //id is ideal
     usdccontributed.innerHTML = ethers.utils.formatUnits(total_usdc,6) + ' $USDC'
 
+    // const plscontributed = document.getElementsById('pls-contrib') //id is ideal
+    // plscontributed.innerHTML = ethers.utils.formatUnits(milestone.plsRaised,18) + ' $PLS' /// huh ???
+    // const usdccontributed = document.getElementsById('usdc-contrib') //id is ideal
+    // usdccontributed.innerHTML = ethers.utils.formatUnits(milestone.usdcRaised,6) + ' $USDC' /// what?
+
       }).catch(err=>{
         console.log("error get user in milestone:",err)
       })
@@ -179,7 +184,8 @@ approvepls.addEventListener('click',function(){
   
   
   function getAllMileStones() {
-    return new Promise(function(resolve, reject) {
+    return new Promise(function (resolve, reject) {
+    
        for (var i = 1; i <= 10; i++) {
       
             getUsersInMileStone(i).then(function(data){
@@ -193,7 +199,7 @@ approvepls.addEventListener('click',function(){
             
            getMilestone(i).then(function(data){
             //console.log('current milestone::', data.plsRaised.toNumber())
-            totalTargetAmount += data.targetAmount.toNumber() //! don't use .toNumber(), format with ethers instead to avoid possible overflows with js
+            totalTargetAmount += parseFloat(ethers.utils.formatUnits(data.targetAmount, 6)) //! don't use .toNumber(), format with ethers instead to avoid possible overflows with js
             allMileStones.push(data)
            }).catch((err)=>{
             console.log('error: ', err)
@@ -226,7 +232,16 @@ approvepls.addEventListener('click',function(){
    }).catch(err=>console.log(err))
    console.log('user details::',user)
 
+    getCurrentMilestoneDetails().then((resp) => {
+      document.getElementById('current_peg_price').innerHTML = '$' + ethers.utils.formatUnits(resp.priceOfPeg, 6)
 
+      const FDV = parseFloat(ethers.utils.formatUnits(resp.priceOfPeg, 6)) * 20e6
+      document.getElementById('fdv-id').innerHTML = '$' + FDV.toLocaleString()
+
+      const circMktCap = FDV * (0.298 - (10 - resp.milestoneId) * 0.02)
+
+      document.getElementById('circ-mkt-cap').innerHTML = '$' + circMktCap.toLocaleString()
+   })
 
 
     getAllMileStones().then(function() {
@@ -248,8 +263,8 @@ approvepls.addEventListener('click',function(){
           
           
           document.getElementById('total_raised_amount').innerHTML = '$' + totalTargetAmount
-              }, 3000);
-       
+
+        }, 3000);
       });
   }
 

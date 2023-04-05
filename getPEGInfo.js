@@ -48,6 +48,17 @@ async function getCurrentMilestone(){
     }
 }
 
+async function getCurrentMilestoneDetails() {
+    try {
+        const currentMileStone = await main_contract.currentMilestone();
+        const data = await main_contract.milestones(currentMileStone);
+        console.log('current milestone data: ', data)
+        return data
+    }
+    catch (e) {
+        console.error('getCurrentMilestoneDetails error: ', e)
+    }
+}
 //returns the milestone details (level details)
 // struct Milestone {
 //     uint256 priceOfPeg;
