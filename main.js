@@ -1,58 +1,58 @@
 //let currentMileStone = 0
 let currentPegPrice = 0
+var totalRaised = ethers.BigNumber.from(0)
 
-  console.log('Roulette contract::',window.roulette)
-  const CONSENT_API_URL = 'https://4c7ygocnf1.execute-api.us-west-2.amazonaws.com/consent-function';
-
-function getConsent(){
+console.log('Roulette contract::', window.roulette)
+const CONSENT_API_URL = 'https://4c7ygocnf1.execute-api.us-west-2.amazonaws.com/consent-function';
+function getConsent() {
   //fetch consent data to confirm if to show modal or not
-  
+
 
   const params = {
-      "useraddress":`${address}`,
-      "write":false
+    "useraddress": `${address}`,
+    "write": false
   };
   const options = {
     method: 'POST',
-    body: JSON.stringify( params )  
+    body: JSON.stringify(params)
   };
-  fetch( CONSENT_API_URL, options )
-    .then( response => response.json() )
-    .then( response => {
+  fetch(CONSENT_API_URL, options)
+    .then(response => response.json())
+    .then(response => {
       //console.log('LSSSSSSSSSSSSSSSSSS:',response)
-        if(response?.length){
-          //do nothing user already consented
-        }else{
-          //show modal
-          const consentmodal = document.getElementById('consent_modal');
-          consentmodal.style.display = 'block'
-        }
-  } );
+      if (response?.length) {
+        //do nothing user already consented
+      } else {
+        //show modal
+        const consentmodal = document.getElementById('consent_modal');
+        consentmodal.style.display = 'block'
+      }
+    });
 }
 
 //function to log and close consent modal
-function saveConsent(){
+function saveConsent() {
   const params = {
-    "useraddress":`${address}`,
-    "write":true
+    "useraddress": `${address}`,
+    "write": true
   };
   const options = {
     method: 'POST',
-    body: JSON.stringify( params )  
+    body: JSON.stringify(params)
   };
-  fetch( CONSENT_API_URL, options )
-    .then( response => response.json() )
-    .then( response => {
-        if(response.status === 'success'){
-          const consentmodal = document.getElementById('consent_modal');
-          consentmodal.style.display = 'none'
-        }
-  } );
+  fetch(CONSENT_API_URL, options)
+    .then(response => response.json())
+    .then(response => {
+      if (response.status === 'success') {
+        const consentmodal = document.getElementById('consent_modal');
+        consentmodal.style.display = 'none'
+      }
+    });
 
 }
 
 const consent_form = document.getElementById('email-form');
-consent_form.addEventListener('submit',(e)=>{
+consent_form.addEventListener('submit', (e) => {
   e.preventDefault()
   saveConsent()
 })
@@ -75,22 +75,22 @@ approvepls.addEventListener('click', function () {
     console.log("pls amount::", plsamount)
     if (plsamount >= 5) {
 
-      makeContributionPLS(plsamount).then(respon=>{
-      
+      makeContributionPLS(plsamount).then(respon => {
+
         donatepls.innerHTML = "Thank you!. \n Your donation has been recieved successfully!"
         donatepls.style.color = 'green';
         //lets reload page
-        setTimeout(()=>{
+        setTimeout(() => {
           location.reload()
-        },2000)
-      
-      }).catch(error=>{
-       
+        }, 2000)
+
+      }).catch(error => {
+
         donatepls.innerHTML = "Sorry!. \n There was an error processing your donation at this time!"
         donatepls.style.color = 'red';
-        setTimeout(()=>{
+        setTimeout(() => {
           location.reload()
-        },2000)
+        }, 2000)
       })
     } else {
       alert("Please provide an amount for the PLS input field")
@@ -113,20 +113,20 @@ approveusdc.addEventListener('click', function () {
     console.log("pls amount::", usdcamount)
     if (usdcamount >= 5) {
 
-      makeContributionUSDC(usdcamount).then(respon=>{
+      makeContributionUSDC(usdcamount).then(respon => {
 
         donateusdc.innerHTML = "Thank you!. \n Your donation has been recieved successfully!"
         donateusdc.style.color = 'green';
         //lets reload page
-        setTimeout(()=>{
+        setTimeout(() => {
           location.reload()
-        },2000)
-      }).catch(error=>{
+        }, 2000)
+      }).catch(error => {
         donateusdc.style.color = 'red';
         donateusdc.innerHTML = "Sorry!. \n There was an error processing your donation at this time!"
-        setTimeout(()=>{
+        setTimeout(() => {
           location.reload()
-        },2000)
+        }, 2000)
       })
     } else {
       alert("Please provide an amount for the PLS input field")
@@ -137,8 +137,50 @@ approveusdc.addEventListener('click', function () {
   })
 })
 
-//};
 
+const plsInput = document.getElementById('plsinput');
+
+plsInput.addEventListener('input', async () => {
+  console.log('Input value changed to:', plsInput.value);
+  const currentMilestoneDetails = await getCurrentMilestoneDetails()
+  console.log('current milestone details: ', currentMilestoneDetails)
+  const parsedAmount = ethers.utils.parseUnits(plsInput.value !== '' ? plsInput.value : '0', 18)
+
+  // if(parsedAmount.lte())
+  const deno = currentMilestoneDetails.plsRaised.add(parsedAmount)
+
+  const pegAllocation = ethers.utils.parseUnits('100000', 18)
+
+  const numera = parsedAmount.mul(pegAllocation)
+
+  const expectedPeg = numera.div(deno)
+
+  const expectedPegElement = document.getElementById('peg-pls-calculated')
+  expectedPegElement.innerHTML = parseFloat(ethers.utils.formatUnits(expectedPeg, 18)).toFixed(2).toLocaleString() + ' PEG'
+});
+
+
+const usdcInput = document.getElementById('usdcinput')
+
+usdcInput.addEventListener('input', async () => {
+  const currentMilestoneDetails = await getCurrentMilestoneDetails()
+  let parsedAmount = ethers.utils.parseUnits(usdcInput.value !== '' ? usdcInput.value : '0', 6)
+  const pegAllocation = ethers.utils.parseUnits('300000', 18)
+
+  parsedAmount = currentMilestoneDetails.usdcRaised.add(parsedAmount).lte(currentMilestoneDetails.targetAmount) ? parsedAmount : currentMilestoneDetails.targetAmount.sub(currentMilestoneDetails.usdcRaised)
+  const deno = currentMilestoneDetails.usdcRaised.add(parsedAmount)
+
+  const numera = parsedAmount.mul(pegAllocation)
+
+  const expectedPeg = numera.div(deno)
+
+  const expectedPegElement = document.getElementById('peg-usdc-calculated')
+  expectedPegElement.innerHTML = parseFloat(ethers.utils.formatUnits(expectedPeg, 18)).toFixed(2).toLocaleString() + ' PEG'
+
+  const currentMilestoneFillable = currentMilestoneDetails.targetAmount.sub(currentMilestoneDetails.usdcRaised)
+  // const excess = parsedAmount.sub(currentMilestoneFillable)
+
+})
 
 
 getCurrentMilestone().then((data) => {
@@ -201,18 +243,12 @@ getCurrentMilestone().then((data) => {
       let userPlsDonations = ethers.utils.parseUnits('0', 18)
       let userUsdcOfPlsDonations = ethers.utils.parseUnits('0', 6)
       console.log('user: ', user)
-      //filter current user
-      // for(let user of user){
-      console.log('user: ', user)
-      console.log('user.user: ', user.user)
-      console.log('global address: ', address)
-      if (user.user.toLowerCase() === address.toLowerCase()) {
-
+      
         userPlsDonations = userPlsDonations.add(user.plsDonations)
         userUsdcDonations = userUsdcDonations.add(user.usdcDonations)
         userUsdcOfPlsDonations = userUsdcOfPlsDonations.add(user.usdcOfPlsDonations)
-      }
-      // }
+      
+  
 
       const usdcOfPlsContributed = document.getElementById('contributions_usdc_of_pls')
       usdcOfPlsContributed.innerHTML = parseFloat(ethers.utils.formatUnits(userUsdcOfPlsDonations, 6)).toFixed(2)
@@ -227,7 +263,7 @@ getCurrentMilestone().then((data) => {
       numberOfUsdcContributed.innerHTML = parseFloat(ethers.utils.formatUnits(userUsdcDonations, 6)).toFixed(2) + ' USDC'
 
       const totalUserContributions = document.getElementById('contributions_total_amount')
-      totalUserContributions.innerHTML = '$' + ethers.utils.formatUnits(userUsdcDonations.add(userUsdcOfPlsDonations), 6)
+      totalUserContributions.innerHTML = '$' + parseFloat(parseFloat(ethers.utils.formatUnits(userUsdcDonations.add(userUsdcOfPlsDonations), 6)).toFixed(2)).toLocaleString()
 
 
 
@@ -292,10 +328,11 @@ getCurrentMilestone().then((data) => {
 
 
 
-function getAllMileStones() {
+function getAllMileStones(milestoneId) {
+
   return new Promise(function (resolve, reject) {
 
-    for (var i = 1; i <= 10; i++) {
+    for (var i = 1; i <= milestoneId; i++) {
 
       getUsersInMileStone(i).then(function (data) {
         // console.log('user in milestone::', data)
@@ -308,14 +345,15 @@ function getAllMileStones() {
 
       getMilestone(i).then(function (data) {
         //console.log('current milestone::', data.plsRaised.toNumber())
-        totalTargetAmount += parseFloat(ethers.utils.formatUnits(data.targetAmount, 6)) //! don't use .toNumber(), format with ethers instead to avoid possible overflows with js
+        totalTargetAmount += parseFloat(ethers.utils.formatUnits(data.targetAmount, 6))
+        totalRaised = totalRaised.add(data.totalUSDCRaised)
         allMileStones.push(data)
       }).catch((err) => {
         console.log('error: ', err)
       })
     }
     resolve();
-  });
+  })
 }
 
 window.onload = () => {
@@ -350,32 +388,52 @@ window.onload = () => {
     const circMktCap = FDV * (0.298 - (10 - resp.milestoneId) * 0.02)
 
     document.getElementById('circ-mkt-cap').innerHTML = '$' + circMktCap.toLocaleString()
-    console.log('total raised: ', ethers.utils.formatUnits(resp.totalUSDCRaised, 6))
-    document.getElementById('total_raised_amount').innerHTML = '$' + ethers.utils.formatUnits(resp.totalUSDCRaised, 6)
 
   })
 
+  getTotalUserPegAllocation().then((allocation) => {
+    console.log('peg allocated: ', ethers.utils.formatUnits(allocation, 18))
+    const contributionsElement = document.getElementById('contributions_peg')
+    contributionsElement.innerHTML = parseFloat(parseFloat(ethers.utils.formatUnits(allocation, 18)).toFixed(2)).toLocaleString()
+  })
 
-  getAllMileStones().then(function () {
+  getCurrentMilestone().then((milestoneId) => {
+    getAllMileStones(milestoneId).then(function () {
 
-    setTimeout(function () {
-      allUsersInMileStone = allUsersInMileStone.sort((a, b) => b.usdcDonations?.toNumber() - a.usdcDonations?.toNumber())
+      setTimeout(function () {
+        allUsersInMileStone = allUsersInMileStone.sort((a, b) => b.usdcDonations?.toNumber() - a.usdcDonations?.toNumber())
 
-      // console.log('allUsersInMileStone::', allUsersInMileStone)
-      // console.log('all milestones::', allMileStones)
+        // console.log('allUsersInMileStone::', allUsersInMileStone)
+        // console.log('all milestones::', allMileStones)
 
-      var milestoneTag = document.createElement("script");
-      milestoneTag.src = " https://roulette-static-files.s3.us-west-2.amazonaws.com/milestone.js";
-      document.getElementsByTagName("body")[0].appendChild(milestoneTag);
-
-
-      var pepesLevelTag = document.createElement("script");
-      pepesLevelTag.src = "https://roulette-static-files.s3.us-west-2.amazonaws.com/pepeslevel.js";
-      document.getElementsByTagName("body")[0].appendChild(pepesLevelTag);
+        var milestoneTag = document.createElement("script");
+        milestoneTag.src = "/milestone.js";
+        document.getElementsByTagName("body")[0].appendChild(milestoneTag);
 
 
+        var pepesLevelTag = document.createElement("script");
+        pepesLevelTag.src = "/pepeslevel.js";
+        document.getElementsByTagName("body")[0].appendChild(pepesLevelTag);
+        document.getElementById('total_raised_amount').innerHTML = '$' + parseFloat(ethers.utils.formatUnits(totalRaised, 6)).toFixed(2).toLocaleString()
 
-    }, 3000);
+      }, 1000);
+    })
+
+    //can read the details of a single user at a particular milestone. If user did not contribute in that milestone, null is returned
+    getUserDetailsAtMilestoneAndIndex(milestoneId).then((response) => { 
+      console.log('response: resp: ', response)
+      const usdcContrib = document.getElementById('usdc-contrib')
+      const plsContrib = document.getElementById('pls-contrib')
+      if (response) {
+        usdcContrib.innerHTML = parseFloat(ethers.utils.formatUnits(response.usdcDonations, 6)).toFixed(2).toLocaleString() + ' USDC'
+        plsContrib.innerHTML = parseFloat(ethers.utils.formatUnits(response.plsDonations, 18)).toFixed(2).toLocaleString() + ' PLS'
+      }
+      else {
+        usdcContrib.innerHTML = 0.00 + ' USDC'
+        plsContrib.innerHTML = 0.00 + ' PLS'
+      }
+    })
+
   });
 }
 

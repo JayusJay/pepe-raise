@@ -18,12 +18,61 @@ const erc20ABI = [
 
 
 //returns the user details 
-// struct User {
-//     address user;
-//     uint256 plsDonations;
-//     uint256 usdcOfPlsDonations;
-//     uint256 usdcDonations;
-// }
+async function getTotalUserPegAllocation() {
+    let pegAllocation = ethers.BigNumber.from(0)
+    const plsPegAllocation = ethers.utils.parseUnits('100000', 18)
+    const usdcPegAllocation = ethers.utils.parseUnits('300000', 18)
+
+    try {
+        const currentMileStoneId = await main_contract.currentMilestone()
+        console.log('current milestone ID: ', currentMileStoneId)
+        for (let i = 1; i <= currentMileStoneId; i++){
+            const did = await getIfUserContributedInMilestone(i);
+            console.log('did: ', did)
+            if (did) {
+                const userDetails = await getUserDetailsAtMilestoneAndIndex(i)
+                const milestoneDetails = await main_contract.milestones(i)
+
+                if (!milestoneDetails.usdcRaised.isZero()) {
+                    pegAllocation = pegAllocation.add(userDetails.usdcDonations.mul(usdcPegAllocation).div(milestoneDetails.usdcRaised))
+                }
+                if (!milestoneDetails.plsRaised.isZero()) {
+                    pegAllocation = pegAllocation.add(userDetails.plsDonations.mul(plsPegAllocation).div(milestoneDetails.plsRaised))
+                }
+            }
+        }
+        return pegAllocation
+    }
+    catch (e) {
+        console.error('getTotalUserPegAllocation error: ', e)
+    }
+}
+    
+async function getIfUserContributedInMilestone(milestoneId) {
+    try {
+        const did = await main_contract.donatedInMilestone(address, milestoneId)
+        return did
+    }
+    catch (e) {
+        console.error('failed to getIfUserContributedInMilestone', e)
+    }
+}
+
+async function getUserDetailsAtMilestoneAndIndex(milestoneId) {
+    try {
+        const did = await getIfUserContributedInMilestone(milestoneId)
+        if (did) {
+            const index = await main_contract.userIndex(address, milestoneId)
+            const userDetails = await main_contract.users(milestoneId, index)
+            return userDetails
+        }
+        return null
+    }
+    catch (e) {
+        console.error('failed to getUserDetailsAtMilestoneAndIndex', e)
+    }
+}
+    
 async function getUserDetails() {
     try {
         //lets get user address
@@ -52,7 +101,7 @@ async function getCurrentMilestoneDetails() {
     try {
         const currentMileStone = await main_contract.currentMilestone();
         const data = await main_contract.milestones(currentMileStone);
-        console.log('current milestone data: ', data)
+        //console.log('current milestone data: ', data)
         return data
     }
     catch (e) {
