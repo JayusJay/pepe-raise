@@ -319,6 +319,15 @@ function getAllMileStones() {
 }
 
 window.onload = () => {
+  getUSDCBalance().then(response=>{
+    document.getElementById('usdc_balance').innerHTML = ethers.utils.formatUnits(response,6)
+})
+
+
+getPLSBalance().then(response=>{
+  document.getElementById('pls_balance').innerHTML = ethers.utils.formatUnits(response,18)
+})
+
   getConsent()
   let user = null
   getUserDetails().then((response) => {

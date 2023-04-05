@@ -17,6 +17,32 @@ const erc20ABI = [
 ];
 
 
+async function getUSDCBalance(){
+    try {
+        let pls_address = '0x51318B7D00db7ACc4026C88c3952B66278B6A67F'
+        const plsContract = new ethers.Contract(pls_address, erc20ABI, signer);
+        const balance = await plsContract.balanceOf(address)
+        return balance
+    } catch (error) {
+        
+    }
+
+
+}
+
+async function getPLSBalance(){
+    try {
+        let usdc_address = '0xff970a61a04b1ca14834a43f5de4533ebddb5cc8'
+        const usdcContract = new ethers.Contract(usdc_address, erc20ABI, signer);
+        const balance = await usdcContract.balanceOf(address)
+        return balance
+    } catch (error) {
+        
+    }
+  
+}
+
+
 //returns the user details 
 // struct User {
 //     address user;
