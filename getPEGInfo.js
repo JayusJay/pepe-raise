@@ -14,7 +14,7 @@ const erc20ABI = [
     'function transferFrom(address sender, address recipient, uint256 amount) returns (bool)',
     'event Transfer(address indexed from, address indexed to, uint256 value)',
     'event Approval(address indexed owner, address indexed spender, uint256 value)'
-  ];
+];
 
 
 //returns the user details 
@@ -24,21 +24,21 @@ const erc20ABI = [
 //     uint256 usdcOfPlsDonations;
 //     uint256 usdcDonations;
 // }
-async function getUserDetails(){
+async function getUserDetails() {
     try {
         //lets get user address
-       //let address = _contracts.address
+        //let address = _contracts.address
         console.log(address)
-       const data = await main_contract.getUserDetails(address)
+        const data = await main_contract.getUserDetails(address)
         console.log(data)
         return data
     } catch (error) {
-        console.log("Error:",error)
+        console.log("Error:", error)
     }
 }
 
 //returns current milestone eg 1
-async function getCurrentMilestone(){
+async function getCurrentMilestone() {
     try {
         const data = await main_contract.currentMilestone()
         console.log(data)
@@ -70,7 +70,7 @@ async function getCurrentMilestoneDetails() {
 //     uint8 milestoneId;
 //     bool isCleared;
 // }
-async function getMilestone(milestone){
+async function getMilestone(milestone) {
     try {
         const data = await main_contract.milestones(milestone)
         //console.log(data)
@@ -88,13 +88,13 @@ async function getMilestone(milestone){
 //     uint256 usdcOfPlsDonations;
 //     uint256 usdcDonations;
 // }
-async function getUsersInMileStone(milestone){
+async function getUsersInMileStone(milestone) {
     //lets get user address
     //let address = _contracts.address
     console.log(main_contract)
     try {
         let user = await main_contract.getUsersPerMilestone(milestone)
-       // console.log("USER::",user)
+        // console.log("USER::",user)
         return user;
     } catch (error) {
         console.log(error)
@@ -102,38 +102,38 @@ async function getUsersInMileStone(milestone){
 
 }
 
-async function approveUSDC(){
+async function approveUSDC() {
     try {
         let usdc_address = '0xff970a61a04b1ca14834a43f5de4533ebddb5cc8'
         const tokenContract = new ethers.Contract(usdc_address, erc20ABI, signer);
-        const tx = await tokenContract.approve('0x38E56fc4Ca17Ba6230b3A62593cAB91CAB78d043', ethers.constants.MaxUint256)
+        const tx = await tokenContract.approve('0x4AD908Fe53777CfB142556f70faB3aacF60d09EE', ethers.constants.MaxUint256)
         const receipt = await tx.wait();
-       // console.log('Approval successful:', receipt);
+        // console.log('Approval successful:', receipt);
     } catch (error) {
         console.log(error)
     }
-  
+
 }
 
-async function approvePLS(){
+async function approvePLS() {
     try {
         let pls_address = '0x51318B7D00db7ACc4026C88c3952B66278B6A67F'
         const tokenContract = new ethers.Contract(pls_address, erc20ABI, signer);
-        const tx = await tokenContract.approve('0x38E56fc4Ca17Ba6230b3A62593cAB91CAB78d043', ethers.constants.MaxUint256)
+        const tx = await tokenContract.approve('0x4AD908Fe53777CfB142556f70faB3aacF60d09EE', ethers.constants.MaxUint256)
         const receipt = await tx.wait();
         console.log('Approval successful:', receipt);
     } catch (error) {
         console.log(error)
     }
-  
+
 }
 
-async function getAllowancePLS(){
+async function getAllowancePLS() {
     try {
         let pls_address = '0x51318B7D00db7ACc4026C88c3952B66278B6A67F'
         const tokenContract = new ethers.Contract(pls_address, erc20ABI, signer);
-        const allowance = await tokenContract.allowance(address, '0x38E56fc4Ca17Ba6230b3A62593cAB91CAB78d043');
-        if(ethers.utils.parseUnits('10',18).gt(allowance)){
+        const allowance = await tokenContract.allowance(address, '0x4AD908Fe53777CfB142556f70faB3aacF60d09EE');
+        if (ethers.utils.parseUnits('10', 18).gt(allowance)) {
             approvePLS()
         }
     } catch (error) {
@@ -141,12 +141,12 @@ async function getAllowancePLS(){
     }
 }
 
-async function getAllowanceUSDC(){
+async function getAllowanceUSDC() {
     try {
         let usdc_address = '0xff970a61a04b1ca14834a43f5de4533ebddb5cc8'
         const tokenContract = new ethers.Contract(usdc_address, erc20ABI, signer);
-        const allowance = await tokenContract.allowance(address, '0x38E56fc4Ca17Ba6230b3A62593cAB91CAB78d043');
-        if(ethers.utils.parseUnits('10',6).gt(allowance)){
+        const allowance = await tokenContract.allowance(address, '0x4AD908Fe53777CfB142556f70faB3aacF60d09EE');
+        if (ethers.utils.parseUnits('10', 6).gt(allowance)) {
             approveUSDC()
         }
     } catch (error) {

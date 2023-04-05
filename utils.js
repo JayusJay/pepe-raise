@@ -317,6 +317,16 @@ const ABI = [
   },
   {
     inputs: [
+      { internalType: "address", name: "", type: "address" },
+      { internalType: "uint8", name: "", type: "uint8" },
+    ],
+    name: "userIndex",
+    outputs: [{ internalType: "uint256", name: "index", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
       { internalType: "uint8", name: "", type: "uint8" },
       { internalType: "uint256", name: "", type: "uint256" },
     ],
@@ -352,7 +362,7 @@ var main_contract = null;
 var address = null;
 
 if (typeof window.ethereum !== "undefined") {
-  const CONTRACT_ADDRESS = "0x38E56fc4Ca17Ba6230b3A62593cAB91CAB78d043";
+  const CONTRACT_ADDRESS = "0x4AD908Fe53777CfB142556f70faB3aacF60d09EE";
   provider = new ethers.providers.Web3Provider(window.ethereum, "any");
   signer = provider.getSigner();
   let promise = new Promise((resolve, reject) => {
