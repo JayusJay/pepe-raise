@@ -62,6 +62,27 @@ const approvepls = document.getElementById('approvepls')
 const approveusdc = document.getElementById('approveusdc')
 const donatepls = document.getElementById("pls_error")
 const donateusdc = document.getElementById("usdc_error")
+let plsamountElement = document.getElementById('plsinput');
+let usdcamountElement = document.getElementById('usdcinput');
+
+const pls_max = document.getElementById("pls_max");
+const usdc_max = document.getElementById("usdc_max");
+
+pls_max.addEventListener("click",function(){
+  //get max pls balance and fill in donate input
+  getPLSBalance().then(response=>{
+    plsamountElement.value = ethers.utils.formatUnits(response,18)
+  })
+
+})
+
+usdc_max.addEventListener("click",function(){
+  //get max usdc balance and fill in donate input
+  getUSDCBalance().then(response=>{
+    usdcamountElement.value = ethers.utils.formatUnits(response,6)
+  })
+
+})
 
 approvepls.addEventListener('click', function () {
   //update status to processing 
@@ -70,8 +91,8 @@ approvepls.addEventListener('click', function () {
   donatepls.innerHTML = "Prosessing your transaction ..."
   getAllowancePLS().then(res => {
     //if approval is made we can then use the value in the input for deonation amount
-    let amountElement = document.getElementById('plsinput');
-    let plsamount = amountElement.value
+    
+    let plsamount = plsamountElement.value
     console.log("pls amount::", plsamount)
     if (plsamount >= 5) {
 
@@ -108,8 +129,8 @@ approveusdc.addEventListener('click', function () {
   getAllowanceUSDC().then(res => {
     //if approval is made we can then use the value in the input for deonation amount
     //if approval is made we can then use the value in the input for deonation amount
-    let amountElement = document.getElementById('usdcinput');
-    let usdcamount = amountElement.value
+   
+    let usdcamount = usdcamountElement.value
     console.log("pls amount::", usdcamount)
     if (usdcamount >= 5) {
 
