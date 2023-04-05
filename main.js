@@ -94,7 +94,7 @@ approvepls.addEventListener('click', function () {
     
     let plsamount = plsamountElement.value
     console.log("pls amount::", plsamount)
-    if (plsamount >= 5) {
+    if (plsamount >= 0.1) {
 
       makeContributionPLS(plsamount).then(respon => {
 
@@ -132,7 +132,7 @@ approveusdc.addEventListener('click', function () {
    
     let usdcamount = usdcamountElement.value
     console.log("pls amount::", usdcamount)
-    if (usdcamount >= 5) {
+    if (usdcamount >= 0.5) {
 
       makeContributionUSDC(usdcamount).then(respon => {
 
