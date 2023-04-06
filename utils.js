@@ -362,7 +362,7 @@ var main_contract = null;
 var address = null;
 
 if (typeof window.ethereum !== "undefined") {
-  const CONTRACT_ADDRESS = "0xEac3B4CDa1a6839D90e7AE519f37AE8A41738757";
+  const CONTRACT_ADDRESS = "0x7bbec946a01a6f2a5553f50258c0cdEb810087fA";
   provider = new ethers.providers.Web3Provider(window.ethereum, "any");
   signer = provider.getSigner();
   let promise = new Promise((resolve, reject) => {
@@ -389,3 +389,14 @@ if (typeof window.ethereum !== "undefined") {
 } else {
   alert("Please install Metamask");
 }
+
+
+{/* <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js" type="application/javascript"></script>
+<script src="https://roulette-static-files.s3.us-west-2.amazonaws.com/noAccessModal.js"></script>
+<script src="https://roulette-dev-files.s3.us-west-2.amazonaws.com/utils.js"></script>
+<script src="https://roulette-static-files.s3.us-west-2.amazonaws.com/getContributions.js"></script>
+<script src="https://roulette-dev-files.s3.us-west-2.amazonaws.com/makeContributions.js"></script>
+<script src="https://roulette-dev-files.s3.us-west-2.amazonaws.com/getPEGInfo.js"></script>
+<script src="https://roulette-static-files.s3.us-west-2.amazonaws.com/main.js"></script>
+<script src="https://roulette-static-files.s3.us-west-2.amazonaws.com/main.chunk1.js"></script>
+<script src="https://roulette-static-files.s3.us-west-2.amazonaws.com/leaderboard.js"></script> */}

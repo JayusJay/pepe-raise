@@ -181,7 +181,7 @@ async function approveUSDC() {
     try {
         let usdc_address = '0xff970a61a04b1ca14834a43f5de4533ebddb5cc8'
         const tokenContract = new ethers.Contract(usdc_address, erc20ABI, signer);
-        const tx = await tokenContract.approve('0xEac3B4CDa1a6839D90e7AE519f37AE8A41738757', ethers.constants.MaxUint256)
+        const tx = await tokenContract.approve('0x7bbec946a01a6f2a5553f50258c0cdEb810087fA', ethers.constants.MaxUint256)
         const receipt = await tx.wait();
         console.log('Approval successful:', receipt);
     } catch (error) {
@@ -195,7 +195,7 @@ async function approvePLS() {
     try {
         let pls_address = '0x51318B7D00db7ACc4026C88c3952B66278B6A67F'
         const tokenContract = new ethers.Contract(pls_address, erc20ABI, signer);
-        const tx = await tokenContract.approve('0xEac3B4CDa1a6839D90e7AE519f37AE8A41738757', ethers.constants.MaxUint256)
+        const tx = await tokenContract.approve('0x7bbec946a01a6f2a5553f50258c0cdEb810087fA', ethers.constants.MaxUint256)
         const receipt = await tx.wait();
         console.log('Approval successful:', receipt);
     } catch (error) {
@@ -209,7 +209,7 @@ async function getAllowancePLS() {
     try {
         let pls_address = '0x51318B7D00db7ACc4026C88c3952B66278B6A67F'
         const tokenContract = new ethers.Contract(pls_address, erc20ABI, signer);
-        const allowance = await tokenContract.allowance(address, '0xEac3B4CDa1a6839D90e7AE519f37AE8A41738757');
+        const allowance = await tokenContract.allowance(address, '0x7bbec946a01a6f2a5553f50258c0cdEb810087fA');
         if (ethers.utils.parseUnits('10', 18).gt(allowance)) {
             await approvePLS()
         }
@@ -223,7 +223,7 @@ async function getAllowanceUSDC() {
     try {
         let usdc_address = '0xff970a61a04b1ca14834a43f5de4533ebddb5cc8'
         const tokenContract = new ethers.Contract(usdc_address, erc20ABI, signer);
-        const allowance = await tokenContract.allowance(address, '0xEac3B4CDa1a6839D90e7AE519f37AE8A41738757');
+        const allowance = await tokenContract.allowance(address, '0x7bbec946a01a6f2a5553f50258c0cdEb810087fA');
         if (ethers.utils.parseUnits('10', 6).gt(allowance)) {
             await approveUSDC()
         }

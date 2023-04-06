@@ -11,7 +11,7 @@
 // //console.log("ALL_CONTRACTS::",all_contracts)
 // const contract = all_contracts.contract
 // const signer = all_contracts.signer
-const CONTRACT_ADDRESS = "0xEac3B4CDa1a6839D90e7AE519f37AE8A41738757";
+const CONTRACT_ADDRESS = "0x7bbec946a01a6f2a5553f50258c0cdEb810087fA";
 _contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, signer);
 console.log("SIGNER:",_contract)
 
