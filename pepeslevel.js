@@ -1,6 +1,6 @@
 const orderedMilestones = allMileStones
   .filter((milestone) => milestone.milestoneId !== 0)
-  .sort((a, b) => a.milestoneId - b.milestoneId);
+  .sort((a, b) => b.milestoneId - a.milestoneId);
 
 const pepesLevelData = orderedMilestones;
 
