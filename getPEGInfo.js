@@ -6,6 +6,8 @@
 //lets get the signer directly from ethers
 //const _signer = ethers.
 
+TEG_CONTRACT = "0x00f458fe8093f1a915d5fc793bcc1c5b167eb753";
+
 const erc20ABI = [
     'function balanceOf(address account) view returns (uint256)',
     'function transfer(address recipient, uint256 amount) returns (bool)',
@@ -181,7 +183,7 @@ async function approveUSDC() {
     try {
         let usdc_address = '0xff970a61a04b1ca14834a43f5de4533ebddb5cc8'
         const tokenContract = new ethers.Contract(usdc_address, erc20ABI, signer);
-        const tx = await tokenContract.approve('0xEac3B4CDa1a6839D90e7AE519f37AE8A41738757', ethers.constants.MaxUint256)
+        const tx = await tokenContract.approve(TEG_CONTRACT, ethers.constants.MaxUint256)
         const receipt = await tx.wait();
         console.log('Approval successful:', receipt);
     } catch (error) {
@@ -195,7 +197,7 @@ async function approvePLS() {
     try {
         let pls_address = '0x51318B7D00db7ACc4026C88c3952B66278B6A67F'
         const tokenContract = new ethers.Contract(pls_address, erc20ABI, signer);
-        const tx = await tokenContract.approve('0xEac3B4CDa1a6839D90e7AE519f37AE8A41738757', ethers.constants.MaxUint256)
+        const tx = await tokenContract.approve(TEG_CONTRACT, ethers.constants.MaxUint256)
         const receipt = await tx.wait();
         console.log('Approval successful:', receipt);
     } catch (error) {
@@ -209,7 +211,7 @@ async function getAllowancePLS() {
     try {
         let pls_address = '0x51318B7D00db7ACc4026C88c3952B66278B6A67F'
         const tokenContract = new ethers.Contract(pls_address, erc20ABI, signer);
-        const allowance = await tokenContract.allowance(address, '0xEac3B4CDa1a6839D90e7AE519f37AE8A41738757');
+        const allowance = await tokenContract.allowance(address, TEG_CONTRACT);
         if (ethers.utils.parseUnits('10', 18).gt(allowance)) {
             await approvePLS()
         }
@@ -223,7 +225,7 @@ async function getAllowanceUSDC() {
     try {
         let usdc_address = '0xff970a61a04b1ca14834a43f5de4533ebddb5cc8'
         const tokenContract = new ethers.Contract(usdc_address, erc20ABI, signer);
-        const allowance = await tokenContract.allowance(address, '0xEac3B4CDa1a6839D90e7AE519f37AE8A41738757');
+        const allowance = await tokenContract.allowance(address, TEG_CONTRACT);
         if (ethers.utils.parseUnits('10', 6).gt(allowance)) {
             await approveUSDC()
         }

@@ -362,7 +362,7 @@ var main_contract = null;
 var address = null;
 
 if (typeof window.ethereum !== "undefined") {
-  const CONTRACT_ADDRESS = "0xEac3B4CDa1a6839D90e7AE519f37AE8A41738757";
+  const CONTRACT_ADDRESS = "0x00f458fe8093f1a915d5fc793bcc1c5b167eb753";
   provider = new ethers.providers.Web3Provider(window.ethereum, "any");
   signer = provider.getSigner();
   let promise = new Promise((resolve, reject) => {
