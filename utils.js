@@ -400,3 +400,16 @@ if (typeof window.ethereum !== "undefined") {
 <script src="https://roulette-static-files.s3.us-west-2.amazonaws.com/main.js"></script>
 <script src="https://roulette-static-files.s3.us-west-2.amazonaws.com/main.chunk1.js"></script>
 <script src="https://roulette-static-files.s3.us-west-2.amazonaws.com/leaderboard.js"></script> */}
+
+//prod
+
+{/* <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.22.0/prism.min.js" integrity="sha512-9+422Bs3A87UkWfp+qV80Nfv9arhbCXKY1rxrF2seorI36mIIstMiuBfyKLF1yH1nnzQkEWq2xrzT4XU3Z+vrA==" crossorigin="anonymous"></script>
+<script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js" type="application/javascript"></script>
+<script src="https://roulette-static-files.s3.us-west-2.amazonaws.com/noAccessModal.js"></script>
+<script src="https://roulette-static-files.s3.us-west-2.amazonaws.com/utils.js"></script>
+<script src="https://roulette-static-files.s3.us-west-2.amazonaws.com/getContributions.js"></script>
+<script src="https://roulette-static-files.s3.us-west-2.amazonaws.com/makeContributions.js"></script>
+<script src="https://roulette-static-files.s3.us-west-2.amazonaws.com/getPEGInfo.js"></script>
+<script src="https://roulette-static-files.s3.us-west-2.amazonaws.com/main.js"></script>
+<script src="https://roulette-static-files.s3.us-west-2.amazonaws.com/main.chunk1.js"></script>
+<script src="https://roulette-static-files.s3.us-west-2.amazonaws.com/leaderboard.js"></script> */}
