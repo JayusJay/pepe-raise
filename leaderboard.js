@@ -157,11 +157,27 @@ function loadLeaderBoardData(data) {
 
 function Run(leaderboardData) {
     //load first 3 entries
-  
-    let startIndex = 0
-    let endIndex = leaderboardData.length - 1
+    //lets get the number #100 ranked and get his value
+    let hundred = leaderboardData[99];
+    let hundred_contribution = parseFloat(parseFloat(ethers.utils.formatUnits(hundred.totalDonation, 6)).toFixed(2))
 
-//load eveythin at once
+
+    //lets get current user
+    for(let item in leaderboardData){
+        console.log(leaderboardData[item], address)
+        if(leaderboardData[item].user == address){
+            //we have current user,
+            //if the rank of the user is > #100 show extra contribution to make
+            if(item > 99){
+                let remaining = hundred_contribution - parseFloat(parseFloat(ethers.utils.formatUnits(leaderboardData[item].totalDonation, 6)).toFixed(2))
+                //show remaining
+                document.getElementById('alert_div').style.display = 'grid';
+                document.getElementById('remaining_to_get_airdrop').innerHTML = `Contribute $ ${remaining} more to be eligible for the airdrop.`
+            }
+        }
+    }
+
+    //load eveythin at once
     loadLeaderBoardData(leaderboardData)
    
     function removeAllEntries() {
@@ -180,7 +196,7 @@ function Run(leaderboardData) {
 
 
 rankUsersDesc().then(data => {
-    console.log('users array::', data)
+    //console.log('users array::', data)
     Run(data)
 }).catch(err => {
     console.log('error rank users::', err)
