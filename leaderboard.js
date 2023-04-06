@@ -158,11 +158,11 @@ function loadLeaderBoardData(data) {
 function Run(leaderboardData) {
     //load first 3 entries
   
-    let startIndex = 4
+    let startIndex = 0
     let endIndex = leaderboardData.length - 1
 
 //load eveythin at once
-    loadLeaderBoardData(leaderboardData.slice(startIndex, endIndex))
+    loadLeaderBoardData(leaderboardData)
    
     function removeAllEntries() {
         // Get all the elements with the specific class name
