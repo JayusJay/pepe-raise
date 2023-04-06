@@ -2,6 +2,7 @@ const orderedMilestones = allMileStones
   .filter((milestone) => milestone.milestoneId !== 0)
   .sort((a, b) => b.milestoneId - a.milestoneId);
 
+
 const pepesLevelData = orderedMilestones;
 
 console.log("levels data::", pepesLevelData);
@@ -57,13 +58,13 @@ function loadPepesTableLevels(data) {
     if (entry.isCleared) {
       levelElement = `<div class="l-status">
             <img src="https://uploads-ssl.webflow.com/641c2b181f41df422637adc5/64200f60acf50ee5d2360703_SOLD%20OUT.png" loading="lazy" alt="" class="level-img">
-            <div class="level-text">Level ${index + 1}</div>
+            <div class="level-text">Level ${entry.milestoneId}</div>
          </div>`;
       entryElement.classList.add("soldout");
     } else if (filled != 0 && filled != 100) {
       levelElement = ` <div class="l-status">
             <img src="https://uploads-ssl.webflow.com/641c2b181f41df422637adc5/6420113ecc09c93f9ec2d90f_open.png" loading="lazy" alt="" class="table_image">
-            <div class="level-text">Level ${index + 1}</div>
+            <div class="level-text">Level ${entry.milestoneId}</div>
          </div>`;
       entryElement.classList.add("open");
     } else {
@@ -71,7 +72,7 @@ function loadPepesTableLevels(data) {
             <div style="padding:0px;" fs-cmssort-type="date" fs-cmssort-field="IDENTIFIER" class="text-table-normal ld">#${
               index + 1
             }</div>
-            <div class="level-text">Level ${index + 1}</div>
+            <div class="level-text">Level ${entry.milestoneId}</div>
          </div>`;
     }
 

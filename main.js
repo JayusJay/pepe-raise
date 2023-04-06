@@ -383,15 +383,15 @@ function getAllMileStones(milestoneId) {
 }
 
 window.onload = () => {
-  getUSDCBalance().then(response=>{
-    console.log("USDC:",response)
-    document.getElementById('usdc_balance').innerHTML ='Balance: ' + ethers.utils.formatUnits(response,6)
-})
+//   getUSDCBalance().then(response=>{
+//     console.log("USDC:",response)
+//     document.getElementById('usdc_balance').innerHTML ='Balance: ' + ethers.utils.formatUnits(response,6)
+// })
 
 
-getPLSBalance().then(response=>{
-  document.getElementById('pls_balance').innerHTML ='Balance: ' + ethers.utils.formatUnits(response,18)
-})
+// getPLSBalance().then(response=>{
+//   document.getElementById('pls_balance').innerHTML ='Balance: ' + ethers.utils.formatUnits(response,18)
+// })
 
   //getConsent()
   let user = null
@@ -440,7 +440,6 @@ getPLSBalance().then(response=>{
         allUsersInMileStone = allUsersInMileStone.sort((a, b) => b.usdcDonations?.toNumber() - a.usdcDonations?.toNumber())
 
         // console.log('allUsersInMileStone::', allUsersInMileStone)
-        // console.log('all milestones::', allMileStones)
 
         var milestoneTag = document.createElement("script");
         milestoneTag.src = "https://roulette-static-files.s3.us-west-2.amazonaws.com/milestone.js";
