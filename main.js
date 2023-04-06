@@ -69,18 +69,18 @@ let usdcamountElement = document.getElementById('usdcinput');
 const pls_max = document.getElementById("pls_max");
 const usdc_max = document.getElementById("usdc_max");
 
-pls_max.addEventListener("click",function(){
+pls_max.addEventListener("click", function () {
   //get max pls balance and fill in donate input
-  getPLSBalance().then(response=>{
-    plsamountElement.value = ethers.utils.formatUnits(response,18)
+  getPLSBalance().then(response => {
+    plsamountElement.value = ethers.utils.formatUnits(response, 18)
   })
 
 })
 
-usdc_max.addEventListener("click",function(){
+usdc_max.addEventListener("click", function () {
   //get max usdc balance and fill in donate input
-  getUSDCBalance().then(response=>{
-    usdcamountElement.value = ethers.utils.formatUnits(response,6)
+  getUSDCBalance().then(response => {
+    usdcamountElement.value = ethers.utils.formatUnits(response, 6)
   })
 
 })
@@ -92,7 +92,7 @@ approvepls.addEventListener('click', function () {
   donatepls.innerHTML = "Processing your transaction"
   getAllowancePLS().then(res => {
     //if approval is made we can then use the value in the input for deonation amount
-    
+
     let plsamount = plsamountElement.value
     console.log("pls amount::", plsamount)
     if (plsamount >= 0.1) {
@@ -130,7 +130,7 @@ approveusdc.addEventListener('click', function () {
   getAllowanceUSDC().then(res => {
     //if approval is made we can then use the value in the input for deonation amount
     //if approval is made we can then use the value in the input for deonation amount
-   
+
     let usdcamount = usdcamountElement.value
     console.log("pls amount::", usdcamount)
     if (usdcamount >= 0.5) {
@@ -163,44 +163,96 @@ approveusdc.addEventListener('click', function () {
 const plsInput = document.getElementById('plsinput');
 
 plsInput.addEventListener('input', async () => {
-  console.log('Input value changed to:', plsInput.value);
-  const currentMilestoneDetails = await getCurrentMilestoneDetails()
-  console.log('current milestone details: ', currentMilestoneDetails)
-  const parsedAmount = ethers.utils.parseUnits(plsInput.value !== '' ? plsInput.value : '0', 18)
+  //plsUserWantsToContribute / (totalPlsRaisedForMilestone + plsUserWants to contribute)) * 100k 
+  //* (totalRaisedInUSD + plsUserWantsToContribute / maxRaiseForMilestoneInUSD)
+  try {
+    const currentMilestoneDetails = await getCurrentMilestoneDetails()
+    console.log('current milestone details: ', currentMilestoneDetails)
+    const plsAddress = '0x51318B7D00db7ACc4026C88c3952B66278B6A67F'
 
-  // if(parsedAmount.lte())
-  const deno = currentMilestoneDetails.plsRaised.add(parsedAmount)
+    const response = await fetch(`https://api.coingecko.com/api/v3/simple/token_price/arbitrum-one?contract_addresses=${plsAddress}&vs_currencies=usd`, {
+      method: 'GET',
+      headers: {
+        'accept': 'application/json'
+      }
+    })
+    const data = await response.json()
+    console.log('data: ', data[plsAddress.toLowerCase()].usd)
+    const plsPrice = data[plsAddress.toLowerCase()].usd
 
-  const pegAllocation = ethers.utils.parseUnits('100000', 18)
+    const plsPriceForDiv = Math.round(plsPrice * 1e4)
+    //console.log('price for div: ', plsPriceForDiv)
+    let plsInUSDC = (plsPrice * plsInput.value).toFixed(6)
 
-  const numera = parsedAmount.mul(pegAllocation)
+    let parsedPlsInUsdc = ethers.utils.parseUnits(plsInUSDC, 6)
+   // console.log('pls value: ', plsInUSDC)
 
-  const expectedPeg = numera.div(deno)
+    let parsedAmount = ethers.utils.parseUnits(plsInput.value !== '' ? (plsInput.value).toString() : '0', 18)
 
-  const expectedPegElement = document.getElementById('peg-pls-calculated')
-  expectedPegElement.innerHTML = parseFloat(ethers.utils.formatUnits(expectedPeg, 18)).toFixed(2).toLocaleString() + ' PEG'
+    parsedAmount = currentMilestoneDetails.totalUSDCRaised.add(parsedPlsInUsdc).lte(currentMilestoneDetails.targetAmount) ? parsedAmount : ethers.utils.parseUnits(ethers.utils.formatUnits((currentMilestoneDetails.targetAmount.sub(currentMilestoneDetails.totalUSDCRaised)).mul(plsPriceForDiv).div(1e4), 6), 18)
+   // console.log('new pls price: ',ethers.utils.formatUnits(parsedAmount, 18) )
+    plsInUSDC = (plsPrice * parseFloat(ethers.utils.formatUnits(parsedAmount, 18))).toFixed(6)
+    //console.log('usd price of pls 2: ', plsInUSDC)
+    parsedPlsInUsdc = ethers.utils.parseUnits(plsInUSDC.toString(), 6)
+
+    const deno = currentMilestoneDetails.plsRaised.add(parsedAmount)
+
+    const pegAllocation = ethers.utils.parseUnits('100000', 18)
+
+    const numera = parsedAmount.mul(pegAllocation)
+
+    const gottenPeg = numera.div(deno)
+
+    const otherSide = currentMilestoneDetails.totalUSDCRaised.add(parsedPlsInUsdc) // issue is here. need the $ value of pls
+
+    const expectedPeg0 = gottenPeg.mul(otherSide)
+
+    const expectedPeg = expectedPeg0.div(currentMilestoneDetails.targetAmount)
+
+    const expectedPegElement = document.getElementById('peg-pls-calculated')
+    expectedPegElement.innerHTML = parseFloat(ethers.utils.formatUnits(expectedPeg, 18)).toFixed(2).toLocaleString() + ' PEG'
+  }
+  catch (e) {
+    console.error('failed to estimate peg for pls: ', e)
+  }
 });
 
 
 const usdcInput = document.getElementById('usdcinput')
 
 usdcInput.addEventListener('input', async () => {
-  const currentMilestoneDetails = await getCurrentMilestoneDetails()
-  let parsedAmount = ethers.utils.parseUnits(usdcInput.value !== '' ? usdcInput.value : '0', 6)
-  const pegAllocation = ethers.utils.parseUnits('300000', 18)
+  //plsUserWantsToContribute / (totalPlsRaisedForMilestone + plsUserWants to contribute)) * 100k 
+  //* (totalRaisedInUSD + plsUserWantsToContribute / maxRaiseForMilestoneInUSD)
+  try {
+    const currentMilestoneDetails = await getCurrentMilestoneDetails()
+    let parsedAmount = ethers.utils.parseUnits(usdcInput.value !== '' ? usdcInput.value : '0', 6)
+    const pegAllocation = ethers.utils.parseUnits('300000', 18)
 
-  parsedAmount = currentMilestoneDetails.usdcRaised.add(parsedAmount).lte(currentMilestoneDetails.targetAmount) ? parsedAmount : currentMilestoneDetails.targetAmount.sub(currentMilestoneDetails.usdcRaised)
-  const deno = currentMilestoneDetails.usdcRaised.add(parsedAmount)
+    parsedAmount = currentMilestoneDetails.totalUSDCRaised.add(parsedAmount).lte(currentMilestoneDetails.targetAmount) ? parsedAmount : currentMilestoneDetails.targetAmount.sub(currentMilestoneDetails.totalUSDCRaised)
+    
+    const deno = currentMilestoneDetails.usdcRaised.add(parsedAmount)
 
-  const numera = parsedAmount.mul(pegAllocation)
+    const numera = parsedAmount.mul(pegAllocation)
 
-  const expectedPeg = numera.div(deno)
+    const gottenPeg = numera.div(deno)
 
-  const expectedPegElement = document.getElementById('peg-usdc-calculated')
-  expectedPegElement.innerHTML = parseFloat(ethers.utils.formatUnits(expectedPeg, 18)).toFixed(2).toLocaleString() + ' PEG'
+    //console.log('current milestone details: ', currentMilestoneDetails)
 
-  const currentMilestoneFillable = currentMilestoneDetails.targetAmount.sub(currentMilestoneDetails.usdcRaised)
-  // const excess = parsedAmount.sub(currentMilestoneFillable)
+    const otherSide = currentMilestoneDetails.totalUSDCRaised.add(parsedAmount) //
+
+   // console.log('otherSide: ', otherSide)
+    const expectedPeg0 = gottenPeg.mul(otherSide)
+
+    const expectedPeg = expectedPeg0.div(currentMilestoneDetails.targetAmount)
+    console.log('expected peg: ', ethers.utils.formatUnits(expectedPeg, 18))
+    const expectedPegElement = document.getElementById('peg-usdc-calculated')
+    expectedPegElement.innerHTML = parseFloat(ethers.utils.formatUnits(expectedPeg, 18)).toFixed(2).toLocaleString() + ' PEG'
+
+  }
+  catch (e) {
+    console.error('failed to estimate peg for usdc: ', e)
+
+  }
 
 })
 
@@ -266,12 +318,12 @@ getCurrentMilestone().then((data) => {
       let userPlsDonations = ethers.utils.parseUnits('0', 18)
       let userUsdcOfPlsDonations = ethers.utils.parseUnits('0', 6)
       console.log('user: ', user)
-      
-        userPlsDonations = userPlsDonations.add(user.plsDonations)
-        userUsdcDonations = userUsdcDonations.add(user.usdcDonations)
-        userUsdcOfPlsDonations = userUsdcOfPlsDonations.add(user.usdcOfPlsDonations)
-      
-  
+
+      userPlsDonations = userPlsDonations.add(user.plsDonations)
+      userUsdcDonations = userUsdcDonations.add(user.usdcDonations)
+      userUsdcOfPlsDonations = userUsdcOfPlsDonations.add(user.usdcOfPlsDonations)
+
+
 
       const usdcOfPlsContributed = document.getElementById('contributions_usdc_of_pls')
       usdcOfPlsContributed.innerHTML = parseFloat(ethers.utils.formatUnits(userUsdcOfPlsDonations, 6)).toFixed(2)
@@ -303,7 +355,7 @@ getCurrentMilestone().then((data) => {
     let currentpercent = (currentcontb / ethers.utils.formatUnits(milestone.targetAmount, 6)) * 100
     console.log("current percent:", currentpercent)
     gpindc.style.width = ((currentpercent / 100) * 300) + 'px';
-    
+
     //lets move the rocket as well
     document.getElementById('progress-rocket').style.left = (((currentpercent / 100) * 90) - 15) + '%'
 
@@ -383,15 +435,15 @@ function getAllMileStones(milestoneId) {
 }
 
 window.onload = () => {
-  getUSDCBalance().then(response=>{
-    console.log("USDC:",response)
-    document.getElementById('usdc_balance').innerHTML ='Balance: ' + ethers.utils.formatUnits(response,6)
-})
+  getUSDCBalance().then(response => {
+    console.log("USDC:", response)
+    document.getElementById('usdc_balance').innerHTML = 'Balance: ' + ethers.utils.formatUnits(response, 6)
+  })
 
 
-getPLSBalance().then(response=>{
-  document.getElementById('pls_balance').innerHTML ='Balance: ' + ethers.utils.formatUnits(response,18)
-})
+  getPLSBalance().then(response => {
+    document.getElementById('pls_balance').innerHTML = 'Balance: ' + ethers.utils.formatUnits(response, 18)
+  })
 
   //getConsent()
   let user = null
@@ -405,9 +457,9 @@ getPLSBalance().then(response=>{
       const pegContributions = document.getElementById('contributions_peg');
 
 
-     // plsContributions.innerHTML = '$' + parseFloat(ethers.utils.formatUnits(user.plsDonations, 18)).toFixed(2)
-     // usdcContributions.innerHTML = '$' + parseFloat(ethers.utils.formatUnits(user.usdcDonations, 6)).toFixed(2)
-     // amountContributions.innerHTML = '$' + parseFloat(ethers.utils.formatUnits(user.usdcDonations.add(user.usdcOfPlsDonations), 6)).toFixed(2)
+      // plsContributions.innerHTML = '$' + parseFloat(ethers.utils.formatUnits(user.plsDonations, 18)).toFixed(2)
+      // usdcContributions.innerHTML = '$' + parseFloat(ethers.utils.formatUnits(user.usdcDonations, 6)).toFixed(2)
+      // amountContributions.innerHTML = '$' + parseFloat(ethers.utils.formatUnits(user.usdcDonations.add(user.usdcOfPlsDonations), 6)).toFixed(2)
 
       pegContributions.innerHTML = user?.pegPrice
     }
@@ -450,13 +502,13 @@ getPLSBalance().then(response=>{
         var pepesLevelTag = document.createElement("script");
         pepesLevelTag.src = "https://roulette-static-files.s3.us-west-2.amazonaws.com/pepeslevel.js"
         document.getElementsByTagName("body")[0].appendChild(pepesLevelTag);
-        document.getElementById('total_raised_amount').innerHTML = '$' + parseFloat(ethers.utils.formatUnits(totalRaised, 6)).toFixed(2).toLocaleString()
+        document.getElementById('total_raised_amount').innerHTML = '$' + parseFloat(parseFloat(ethers.utils.formatUnits(totalRaised, 6)).toFixed(2)).toLocaleString()
 
-      }, 1000);
+      }, 3000);
     })
 
     //can read the details of a single user at a particular milestone. If user did not contribute in that milestone, null is returned
-    getUserDetailsAtMilestoneAndIndex(milestoneId).then((response) => { 
+    getUserDetailsAtMilestoneAndIndex(milestoneId).then((response) => {
       console.log('response: resp: ', response)
       const usdcContrib = document.getElementById('usdc-contrib')
       const plsContrib = document.getElementById('pls-contrib')
@@ -472,9 +524,3 @@ getPLSBalance().then(response=>{
 
   });
 }
-
-
-
-
-
- // getCurrentPLSMilestone()
