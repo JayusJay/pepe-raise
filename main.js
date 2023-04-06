@@ -88,7 +88,7 @@ approvepls.addEventListener('click', function () {
   //update status to processing 
   donatepls.style.display = 'block';
   donatepls.style.color = 'yellow';
-  donatepls.innerHTML = "Prosessing your transaction ..."
+  donatepls.innerHTML = "Processing your transaction"
   getAllowancePLS().then(res => {
     //if approval is made we can then use the value in the input for deonation amount
     
@@ -98,7 +98,7 @@ approvepls.addEventListener('click', function () {
 
       makeContributionPLS(plsamount).then(respon => {
 
-        donatepls.innerHTML = "Thank you!. \n Your donation has been recieved successfully!"
+        donatepls.innerHTML = "Thank you!. \n Your contribution has been recieved successfully!"
         donatepls.style.color = 'green';
         //lets reload page
         setTimeout(() => {
@@ -107,14 +107,14 @@ approvepls.addEventListener('click', function () {
 
       }).catch(error => {
 
-        donatepls.innerHTML = "Sorry!. \n There was an error processing your donation at this time!"
+        donatepls.innerHTML = "Sorry!. \n There was an error processing your contribution at this time!"
         donatepls.style.color = 'red';
         setTimeout(() => {
           location.reload()
         }, 2000)
       })
     } else {
-      alert("Please provide an amount for the PLS input field")
+      alert("Please provide a valid amount for the input field")
     }
 
   }).catch(error => {
@@ -125,7 +125,7 @@ approvepls.addEventListener('click', function () {
 approveusdc.addEventListener('click', function () {
   donateusdc.style.display = 'block';
   donateusdc.style.color = 'yellow';
-  donateusdc.innerHTML = "Prosessing your donation ..."
+  donateusdc.innerHTML = "Processing your transaction"
   getAllowanceUSDC().then(res => {
     //if approval is made we can then use the value in the input for deonation amount
     //if approval is made we can then use the value in the input for deonation amount
@@ -136,7 +136,7 @@ approveusdc.addEventListener('click', function () {
 
       makeContributionUSDC(usdcamount).then(respon => {
 
-        donateusdc.innerHTML = "Thank you!. \n Your donation has been recieved successfully!"
+        donateusdc.innerHTML = "Thank you!. \n Your contribution has been recieved successfully!"
         donateusdc.style.color = 'green';
         //lets reload page
         setTimeout(() => {
@@ -144,13 +144,13 @@ approveusdc.addEventListener('click', function () {
         }, 2000)
       }).catch(error => {
         donateusdc.style.color = 'red';
-        donateusdc.innerHTML = "Sorry!. \n There was an error processing your donation at this time!"
+        donateusdc.innerHTML = "Sorry!. \n There was an error processing your contribution at this time!"
         setTimeout(() => {
           location.reload()
         }, 2000)
       })
     } else {
-      alert("Please provide an amount for the PLS input field")
+      alert("Please provide a valid amount for the input field")
     }
 
   }).catch(error => {
