@@ -4,31 +4,32 @@ var totalRaised = ethers.BigNumber.from(0)
 
 console.log('Roulette contract::', window.roulette)
 const CONSENT_API_URL = 'https://4c7ygocnf1.execute-api.us-west-2.amazonaws.com/consent-function';
-function getConsent() {
-  //fetch consent data to confirm if to show modal or not
+
+// function getConsent() {
+//   //fetch consent data to confirm if to show modal or not
 
 
-  const params = {
-    "useraddress": `${address}`,
-    "write": false
-  };
-  const options = {
-    method: 'POST',
-    body: JSON.stringify(params)
-  };
-  fetch(CONSENT_API_URL, options)
-    .then(response => response.json())
-    .then(response => {
-      //console.log('LSSSSSSSSSSSSSSSSSS:',response)
-      if (response?.length) {
-        //do nothing user already consented
-      } else {
-        //show modal
-        const consentmodal = document.getElementById('consent_modal');
-        consentmodal.style.display = 'block'
-      }
-    });
-}
+//   const params = {
+//     "useraddress": `${address}`,
+//     "write": false
+//   };
+//   const options = {
+//     method: 'POST',
+//     body: JSON.stringify(params)
+//   };
+//   fetch(CONSENT_API_URL, options)
+//     .then(response => response.json())
+//     .then(response => {
+//       //console.log('LSSSSSSSSSSSSSSSSSS:',response)
+//       if (response?.length) {
+//         //do nothing user already consented
+//       } else {
+//         //show modal
+//         const consentmodal = document.getElementById('consent_modal');
+//         consentmodal.style.display = 'block'
+//       }
+//     });
+// }
 
 //function to log and close consent modal
 function saveConsent() {
@@ -392,7 +393,7 @@ getPLSBalance().then(response=>{
   document.getElementById('pls_balance').innerHTML ='Balance: ' + ethers.utils.formatUnits(response,18)
 })
 
-  getConsent()
+  //getConsent()
   let user = null
   getUserDetails().then((response) => {
     user = response;
