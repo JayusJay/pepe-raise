@@ -434,6 +434,24 @@ function getAllMileStones(milestoneId) {
   })
 }
 
+//! CLAIM PEG
+document.getElementById('claim-btn').addEventListener('click', () => {
+  hasUserClaimed().then((response) => {
+    console.log('response: ', response)
+    if (response) {
+      claimPeg().then((response) => {
+        console.log('claim peg response: ', response)
+      }).catch((err) => {
+        console.log('error: ', err)
+      })
+    } else {
+      alert('You have already claimed your PEG')
+    }
+  }).catch((err) => {
+    console.log('error: ', err)
+  })
+})
+
 window.onload = () => {
   getUSDCBalance().then(response => {
     console.log("USDC:", response)
@@ -523,4 +541,22 @@ window.onload = () => {
     })
 
   });
+
+  hasUserClaimed().then((response) => {
+    console.log('has user claimed: ', response)
+    if (response) {
+      //set claim button to disabled
+      document.getElementById('claim-btn').style.display = 'none'
+      //get document element that shows claimable amount and set it to 0
+      document.getElementById('claimable_amount').innerHTML = '$' + 0.00
+    }
+    else {
+      //get claimable amount
+      getClaimableAmount().then((response) => {
+        console.log('claimable amount: ', response)
+        document.getElementById('claimable_amount').innerHTML = '$' + parseFloat(ethers.utils.formatUnits(response, 18)).toFixed(2).toLocaleString()
+      })
+    }
+  })
+
 }
