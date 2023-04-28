@@ -2,7 +2,7 @@
 let currentPegPrice = 0
 var totalRaised = ethers.BigNumber.from(0)
 
-console.log('Roulette contract::', window.roulette)
+//console.log('Roulette contract::', window.roulette)
 const CONSENT_API_URL = 'https://4c7ygocnf1.execute-api.us-west-2.amazonaws.com/consent-function';
 
 // function getConsent() {
@@ -438,7 +438,7 @@ function getAllMileStones(milestoneId) {
 document.getElementById('claim-btn').addEventListener('click', () => {
   hasUserClaimed().then((response) => {
     console.log('response: ', response)
-    if (response) {
+    if (!response) {
       claimPeg().then((response) => {
         console.log('claim peg response: ', response)
       }).catch((err) => {
@@ -498,7 +498,7 @@ window.onload = () => {
   })
 
   getTotalUserPegAllocation().then((allocation) => {
-    console.log('peg allocated: ', ethers.utils.formatUnits(allocation, 18))
+    //console.log('peg allocated: ', ethers.utils.formatUnits(allocation, 18))
     const contributionsElement = document.getElementById('contributions_peg')
     contributionsElement.innerHTML = parseFloat(parseFloat(ethers.utils.formatUnits(allocation, 18)).toFixed(2)).toLocaleString()
   })
@@ -522,12 +522,15 @@ window.onload = () => {
         document.getElementsByTagName("body")[0].appendChild(pepesLevelTag);
         document.getElementById('total_raised_amount').innerHTML = '$' + parseFloat(parseFloat(ethers.utils.formatUnits(totalRaised, 6)).toFixed(2)).toLocaleString()
 
+        // var pepeClaimTag = document.createElement("script");
+        // pepeClaimTag.src = "./claimPeg.js"
+        // document.getElementsByTagName("body")[0].appendChild(pepeClaimTag);
       }, 3000);
     })
 
     //can read the details of a single user at a particular milestone. If user did not contribute in that milestone, null is returned
     getUserDetailsAtMilestoneAndIndex(milestoneId).then((response) => {
-      console.log('response: resp: ', response)
+      //console.log('response: resp: ', response)
       const usdcContrib = document.getElementById('usdc-contrib')
       const plsContrib = document.getElementById('pls-contrib')
       if (response) {
@@ -548,13 +551,13 @@ window.onload = () => {
       //set claim button to disabled
       document.getElementById('claim-btn').style.display = 'none'
       //get document element that shows claimable amount and set it to 0
-      document.getElementById('claimable_amount').innerHTML = '$' + 0.00
+      document.getElementById('claimable_amount').innerHTML = 0.00 + ' $PEG'
     }
     else {
       //get claimable amount
-      getClaimableAmount().then((response) => {
+      getUserPegOwed().then((response) => {
         console.log('claimable amount: ', response)
-        document.getElementById('claimable_amount').innerHTML = '$' + parseFloat(ethers.utils.formatUnits(response, 18)).toFixed(2).toLocaleString()
+        document.getElementById('claimable_amount').innerHTML = parseFloat(ethers.utils.formatUnits(response, 18)).toFixed(2).toLocaleString() + ' $PEG'
       })
     }
   })

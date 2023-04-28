@@ -5,7 +5,7 @@ const orderedMilestones = allMileStones
 
 const pepesLevelData = orderedMilestones;
 
-console.log("levels data::", pepesLevelData);
+//console.log("levels data::", pepesLevelData);
 
 const levelsPepesTable = document.querySelector(
   '[datasource="levels-pepes-table"]'
@@ -31,14 +31,14 @@ function loadPepesTableLevels(data) {
     const targetAmount = ethers.utils.formatUnits(entry.targetAmount, 6);
     const totalUSDCRaised = ethers.utils.formatUnits(entry.totalUSDCRaised, 6);
 
-    console.log("entry::" + index, {
-      usdcOfPlsRaised,
-      usdcRaised,
-      priceOfPeg,
-      plsRaised,
-      targetAmount,
-      totalUSDCRaised,
-    });
+    // console.log("entry::" + index, {
+    //   usdcOfPlsRaised,
+    //   usdcRaised,
+    //   priceOfPeg,
+    //   plsRaised,
+    //   targetAmount,
+    //   totalUSDCRaised,
+    // });
 
     let pegPriceUsdc = entry.isCleared
       ? (parseFloat(usdcRaised) / 300000).toFixed(2)

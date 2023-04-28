@@ -1,7 +1,7 @@
 async function getUserPegOwed() {
     try {
         const pegOwed = await claimContract.calculatePegOwed(address);
-        return ethers.utils.formatUnits(pegOwed, 18);
+        return pegOwed
     }
     catch (e) {
         console.error('failed to getUserPegOwed', e);
@@ -52,7 +52,7 @@ async function isClaimEnabled() {
 async function getTotalPegClaimable() {
     try {
         const pegClaimable = await claimContract.totalPegClaimable();
-        return ethers.utils.formatUnits(pegClaimable, 18);
+        return pegClaimable
     }
     catch (e) {
         console.error('failed to getTotalPegClaimable', e);
