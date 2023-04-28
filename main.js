@@ -440,6 +440,7 @@ document.getElementById('claim-btn').addEventListener('click', () => {
     console.log('response: ', response)
     if (!response) {
       claimPeg().then((response) => {
+        alert('You have successfully claimed your PEG')
         console.log('claim peg response: ', response)
       }).catch((err) => {
         console.log('error: ', err)
@@ -551,7 +552,9 @@ window.onload = () => {
       //set claim button to disabled
       document.getElementById('claim-btn').style.display = 'none'
       //get document element that shows claimable amount and set it to 0
-      document.getElementById('claimable_amount').innerHTML = 0.00 + ' $PEG'
+      document.getElementById('claimable_amount').innerHTML = "Claimed your $PEG, right?"
+      document.getElementById("available-txt").style.display = "none";
+      //0.00 + ' $PEG'
     }
     else {
       //get claimable amount

@@ -385,12 +385,7 @@ if (typeof window.ethereum !== "undefined") {
   });
 
   promise.then((res) => console.log(res)).catch((err) => console.log(err));
-  // provider.send("eth_requestAccounts", []).then(res=>{
-  //    // accounts = res
-  //     console.log("Accounts RES::",res)
-  // }).catch(error=>{
-  //     console.log("ERROR:",error)
-  // })
+  
   main_contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, provider);
   claimContract = new ethers.Contract(CLAIM_CONTRACT_ADDRESS, CLAIM_ABI, signer);
 } else {
