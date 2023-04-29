@@ -26,6 +26,7 @@ async function claimPeg() {
     }
     catch (e) {
         console.error('failed to claim peg', e);
+        throw e;
     }
 }
 

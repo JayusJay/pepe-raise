@@ -433,21 +433,42 @@ function getAllMileStones(milestoneId) {
     resolve();
   })
 }
+document.getElementById('claim-modal').style.display = 'none'
+document.getElementById('claim-modal').addEventListener('click', () => {
+  document.getElementById('claim-modal').style.display = 'none'
+})
 
 //! CLAIM PEG
 document.getElementById('claim-btn').addEventListener('click', () => {
-  hasUserClaimed().then((response) => {
-    console.log('response: ', response)
-    if (!response) {
-      claimPeg().then((response) => {
-        alert('You have successfully claimed your PEG')
-        console.log('claim peg response: ', response)
+  isClaimEnabled().then((response) => {
+    console.log('claim enabled: ', response)
+    if (response) {
+      hasUserClaimed().then((response) => {
+        console.log('claimed: ', response)
+    
+        if (!response) {
+          claimPeg().then(() => {
+            document.getElementById('claim-modal').style.display = 'block'
+            document.getElementById('claim-modal-txt').innerHTML = 'You have successfully claimed your $PEG, ser'
+            document.getElementById('claimable_amount').innerHTML = "Claimed your $PEG, right?"
+    
+          }).catch((err) => {
+            document.getElementById('claim-modal').style.display = 'block'
+            document.getElementById('claim-modal-txt').innerHTML = 'Failed to claim your $PEG ser, please try again later'
+            console.log('error: ', err)
+          })
+        } else {
+          document.getElementById('claim-modal').style.display = 'block'
+        }
       }).catch((err) => {
         console.log('error: ', err)
       })
-    } else {
-      alert('You have already claimed your PEG')
     }
+    else {
+      document.getElementById('claim-modal').style.display = 'block'
+      document.getElementById('claim-modal-txt').innerHTML = 'Claiming is not enabled yet, ser'
+    }
+    
   }).catch((err) => {
     console.log('error: ', err)
   })
@@ -548,13 +569,12 @@ window.onload = () => {
 
   hasUserClaimed().then((response) => {
     console.log('has user claimed: ', response)
+
     if (response) {
       //set claim button to disabled
       document.getElementById('claim-btn').style.display = 'none'
-      //get document element that shows claimable amount and set it to 0
       document.getElementById('claimable_amount').innerHTML = "Claimed your $PEG, right?"
       document.getElementById("available-txt").style.display = "none";
-      //0.00 + ' $PEG'
     }
     else {
       //get claimable amount
