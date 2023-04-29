@@ -2,7 +2,7 @@
 let currentPegPrice = 0
 var totalRaised = ethers.BigNumber.from(0)
 
-console.log('Roulette contract::', window.roulette)
+//console.log('Roulette contract::', window.roulette)
 const CONSENT_API_URL = 'https://4c7ygocnf1.execute-api.us-west-2.amazonaws.com/consent-function';
 
 // function getConsent() {
@@ -433,6 +433,46 @@ function getAllMileStones(milestoneId) {
     resolve();
   })
 }
+document.getElementById('claim-modal').style.display = 'none'
+document.getElementById('claim-modal').addEventListener('click', () => {
+  document.getElementById('claim-modal').style.display = 'none'
+})
+
+//! CLAIM PEG
+document.getElementById('claim-btn').addEventListener('click', () => {
+  isClaimEnabled().then((response) => {
+    console.log('claim enabled: ', response)
+    if (response) {
+      hasUserClaimed().then((response) => {
+        console.log('claimed: ', response)
+    
+        if (!response) {
+          claimPeg().then(() => {
+            document.getElementById('claim-modal').style.display = 'block'
+            document.getElementById('claim-modal-txt').innerHTML = 'You have successfully claimed your $PEG, ser'
+            document.getElementById('claimable_amount').innerHTML = "Claimed your $PEG, right?"
+    
+          }).catch((err) => {
+            document.getElementById('claim-modal').style.display = 'block'
+            document.getElementById('claim-modal-txt').innerHTML = 'Failed to claim your $PEG ser, please try again later'
+            console.log('error: ', err)
+          })
+        } else {
+          document.getElementById('claim-modal').style.display = 'block'
+        }
+      }).catch((err) => {
+        console.log('error: ', err)
+      })
+    }
+    else {
+      document.getElementById('claim-modal').style.display = 'block'
+      document.getElementById('claim-modal-txt').innerHTML = 'Claiming is not enabled yet, ser'
+    }
+    
+  }).catch((err) => {
+    console.log('error: ', err)
+  })
+})
 
 window.onload = () => {
   getUSDCBalance().then(response => {
@@ -480,7 +520,7 @@ window.onload = () => {
   })
 
   getTotalUserPegAllocation().then((allocation) => {
-    console.log('peg allocated: ', ethers.utils.formatUnits(allocation, 18))
+    //console.log('peg allocated: ', ethers.utils.formatUnits(allocation, 18))
     const contributionsElement = document.getElementById('contributions_peg')
     contributionsElement.innerHTML = parseFloat(parseFloat(ethers.utils.formatUnits(allocation, 18)).toFixed(2)).toLocaleString()
   })
@@ -504,12 +544,15 @@ window.onload = () => {
         document.getElementsByTagName("body")[0].appendChild(pepesLevelTag);
         document.getElementById('total_raised_amount').innerHTML = '$' + parseFloat(parseFloat(ethers.utils.formatUnits(totalRaised, 6)).toFixed(2)).toLocaleString()
 
+        // var pepeClaimTag = document.createElement("script");
+        // pepeClaimTag.src = "./claimPeg.js"
+        // document.getElementsByTagName("body")[0].appendChild(pepeClaimTag);
       }, 3000);
     })
 
     //can read the details of a single user at a particular milestone. If user did not contribute in that milestone, null is returned
     getUserDetailsAtMilestoneAndIndex(milestoneId).then((response) => {
-      console.log('response: resp: ', response)
+      //console.log('response: resp: ', response)
       const usdcContrib = document.getElementById('usdc-contrib')
       const plsContrib = document.getElementById('pls-contrib')
       if (response) {
@@ -523,4 +566,23 @@ window.onload = () => {
     })
 
   });
+
+  hasUserClaimed().then((response) => {
+    console.log('has user claimed: ', response)
+
+    if (response) {
+      //set claim button to disabled
+      document.getElementById('claim-btn').style.display = 'none'
+      document.getElementById('claimable_amount').innerHTML = "Claimed your $PEG, right?"
+      document.getElementById("available-txt").style.display = "none";
+    }
+    else {
+      //get claimable amount
+      getUserPegOwed().then((response) => {
+        console.log('claimable amount: ', response)
+        document.getElementById('claimable_amount').innerHTML = parseFloat(ethers.utils.formatUnits(response, 18)).toFixed(2).toLocaleString() + ' $PEG'
+      })
+    }
+  })
+
 }
